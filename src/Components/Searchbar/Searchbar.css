@@ -15,7 +15,7 @@
     display: inline-block;
 }
 
-#header, a{
+#header, .nav-bar-links{
     display: inline-block;
     color: white;
     text-decoration: none;

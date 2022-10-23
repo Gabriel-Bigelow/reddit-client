@@ -16,12 +16,12 @@ export default function Searchbar () {
                 <form>
                     <input id="searchbar" placeholder='Search' />
                 </form>
-                <NavLink>Popular</NavLink>
+                <NavLink className="nav-bar-link">Popular</NavLink>
             </div>
 
             <div className="inner" id="right-flex">
-                <NavLink>Notifications</NavLink>
-                <NavLink>Account</NavLink>
+                <NavLink className="nav-bar-link">Notifications</NavLink>
+                <NavLink className="nav-bar-link">Account</NavLink>
             </div>
         </nav>
     )
