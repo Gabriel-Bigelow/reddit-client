@@ -3,9 +3,9 @@ import './SubredditsBar.css';
 
 export default function SubredditsBar () {
     return (
-        <div id='subreddits-box-container'>
-            <div className='subreddits-box'>
-                <div id="subreddits-box-inner-container">
+        <div id='subreddits-container'>
+            <div className='subreddits'>
+                <div id="subreddits-inner-container">
                     <h1>Subreddits</h1>
                     <ul className="subreddit-links">
                         {/*replace with prop.map() function to create NavLinks*/}

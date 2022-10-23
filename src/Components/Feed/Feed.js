@@ -1,7 +1,12 @@
+import Article from "../Article/Article"
+
+import './Feed.css'
+
 export default function Feed () {
     return (
-        <div>
+        <div id="articles-container">
             {/* come back to this and use .map() to populate the feed with articles */ }
+            <Article />
         </div>
     )
 }

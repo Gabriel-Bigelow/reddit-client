@@ -1,10 +1,4 @@
-#subreddits-container {
-    justify-content: center;
-    align-items: center;
-    margin: 100px 
-}
-
-.subreddits {
+.article {
     position: relative;
     width: auto;
     height: 100%;
@@ -12,7 +6,7 @@
     justify-content: center;
     align-items: center;
 }
-.subreddits::before {
+.article::before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -20,39 +14,37 @@
     width: 100%;
     height:100%;
     filter: blur(25px);
-    transform: translateY(25px) scale(1);
+    transform: translateY(25px);
 }
 
-.subreddits:nth-child(1)::before {
+.article:nth-child(1)::before {
     background: gray;
     z-index: 0;
 }
 
-#subreddits-inner-container {
+.article-inner-container {
     background-color: white;
     z-index: 1;
     width: 100%;
+    padding: 20px;
 }
-.subreddits h1 {
-    background-color: rgb(6, 141, 249);
-    color: white;
-    text-align: center;
-    margin: 0px;
+.article h2, .article h4 {
+    margin: 0px 0px 5px;
 }
 
-.subreddits ul {
+.article ul {
     list-style: none;
     padding: 20px 30px
 }
 
-.subreddits li {
+.article li {
     margin: 20px 0px;
     font-size: 1.5rem;
 }
 
-.subreddits a{
+.article a{
     color: gray;
 }
-.subreddits a:visited {
+.article a:visited {
     color: gray;
 }
