@@ -4,24 +4,24 @@ import logo from './logo.png';
 
 export default function Searchbar () {
     return (
-        <nav>
+        <nav id="nav-bar">
             
-            <div class="inner" id="left-flex">
+            <div className="inner" id="left-flex">
                 <img id="nav-logo" src={logo} alt="a blue reddit snoo"/>
-                <h1>Lurker</h1>
+                <h1 id="header">Lurker</h1>
             </div>
             
             
-            <div class="inner" id="center-flex">
+            <div className="inner" id="center-flex">
                 <form>
                     <input id="searchbar" placeholder='Search' />
                 </form>
-                <NavLink>Popular</NavLink>
+                <NavLink className="nav-bar-link">Popular</NavLink>
             </div>
 
-            <div class="inner" id="right-flex">
-                <NavLink>Notifications</NavLink>
-                <NavLink>Account</NavLink>
+            <div className="inner" id="right-flex">
+                <NavLink className="nav-bar-link">Notifications</NavLink>
+                <NavLink className="nav-bar-link">Account</NavLink>
             </div>
         </nav>
     )
