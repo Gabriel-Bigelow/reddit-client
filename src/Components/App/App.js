@@ -7,6 +7,7 @@ import {
   useRouteMatch
 } from 'react-router-dom';
 
+import './App.css'
 import Searchbar from '../Searchbar/Searchbar';
 import SubredditsBar from '../SubredditsBar/SubredditsBar';
 
