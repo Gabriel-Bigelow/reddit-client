@@ -18,7 +18,7 @@ function App() {
     <Router>
       
       <Searchbar />
-      <div>
+      <div id="body-container">
         <Feed />
         <SubredditsBar />
       </div>

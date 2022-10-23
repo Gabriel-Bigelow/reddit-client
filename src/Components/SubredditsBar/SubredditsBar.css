@@ -1,8 +1,10 @@
 #subreddits-container {
-    justify-content: center;
-    align-items: center;
-    margin: 100px 
 }
+
+
+
+
+
 
 .subreddits {
     position: relative;
@@ -10,7 +12,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
 }
 .subreddits::before {
     content: '';

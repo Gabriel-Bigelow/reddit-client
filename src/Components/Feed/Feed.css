@@ -1,5 +1,7 @@
 #articles-container {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 100px 100px 50px 100px
+    margin: 0;
 }

@@ -7,6 +7,9 @@ export default function Feed () {
         <div id="articles-container">
             {/* come back to this and use .map() to populate the feed with articles */ }
             <Article />
+            <Article />
+            <Article />
+            <Article />
         </div>
     )
 }

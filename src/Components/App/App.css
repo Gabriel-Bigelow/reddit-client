@@ -1,0 +1,7 @@
+#body-container {
+    display: flex;
+    justify-content: center;
+    align-content: top;
+    margin: 2.5% 10%;
+    gap: 5%;
+}

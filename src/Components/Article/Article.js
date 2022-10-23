@@ -5,9 +5,11 @@ export default function Article () {
     return (
         <div className="article">
             <div className="article-inner-container">
-                <h2>Article title that will usually describe the post that it is a part of</h2>
                 <h4><NavLink>r/SubredditTitle</NavLink> by u/userName {/* grab data here for username and time*/} hours ago </h4>
-                <div>
+                
+                
+                <div className="article-body">
+                    <h2>Article title that will usually describe the post that it is a part of</h2>
                     IF THERE IS AN IMAGE, THE IMAGE WILL APPEAR HERE. IF IT IS JUST A BODY OF TEXT, THAT WILL ALSO APPEAR HERE,
                     UNLESS IT IS SUPER LONG, THEN IT WILL JUST STOP AFTER A SET AMOUNT OF PAGE REAL ESTATE IS TAKEN UP AND THEN AN ELLIPSE
                     AND "READ MORE" BUTTON WILL APPEAR AT THE BOTTOM WHERE YOU CAN CLICK IT EXPAND THE POST.
