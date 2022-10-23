@@ -8,12 +8,15 @@ import {
 } from 'react-router-dom';
 
 import Searchbar from '../Searchbar/Searchbar';
+import SubredditsBar from '../SubredditsBar/SubredditsBar';
 
 
 function App() {
   return ( 
     <Router>
       <Searchbar />
+
+      <SubredditsBar />      
     </Router>
   );
 }
