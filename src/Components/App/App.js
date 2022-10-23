@@ -10,14 +10,19 @@ import {
 import './App.css'
 import Searchbar from '../Searchbar/Searchbar';
 import SubredditsBar from '../SubredditsBar/SubredditsBar';
+import Feed from '../Feed/Feed';
 
 
 function App() {
   return ( 
     <Router>
+      
       <Searchbar />
-
-      <SubredditsBar />      
+      <div>
+        <Feed />
+        <SubredditsBar />
+      </div>
+           
     </Router>
   );
 }
