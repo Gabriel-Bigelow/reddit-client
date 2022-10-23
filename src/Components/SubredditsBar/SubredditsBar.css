@@ -26,34 +26,38 @@
 }
 
 .subreddits:nth-child(1)::before {
-    background: gray;
+    background: rgb(190, 190, 190);
     z-index: 0;
 }
 
 #subreddits-inner-container {
     background-color: white;
     z-index: 1;
-    width: 100%;
 }
 .subreddits h1 {
-    background-color: rgb(6, 141, 249);
+    background-color: rgb(6, 114, 249);
     color: white;
     text-align: center;
     margin: 0px;
+    padding: 0px 2rem;
 }
 
 .subreddits ul {
     list-style: none;
-    padding: 20px 30px
+    margin: 0px;
+    padding: 0px;
+    justify-content: left;
 }
 
 .subreddits li {
-    margin: 20px 0px;
     font-size: 1.5rem;
+    margin: 1rem 1.5rem 1.5rem 1.5rem;
+    padding: 0px;
 }
 
 .subreddits a{
     color: gray;
+    font-size: 1rem;
 }
 .subreddits a:visited {
     color: gray;

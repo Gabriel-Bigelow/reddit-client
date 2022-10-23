@@ -16,7 +16,7 @@
     height: 100%;
     filter: blur(1.5625rem);
     transform: translateY(25px);
-    background:gray;
+    background: rgb(190, 190, 190);
 }
 
 
