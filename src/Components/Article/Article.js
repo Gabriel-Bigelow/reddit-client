@@ -1,35 +1,81 @@
 import './Article.css'
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectArticle } from './articleSlice';
+import { selectArticle, loadArticle } from './articleSlice';
+import { useEffect } from 'react';
 
+function formatTime (time) {
+    if (time[0] < 60 ) {
+        time[4] = time[0].toFixed(0);
+        time[5] = 'seconds'
+    } else if (time[1] < 60) {
+        time[4] = time[1].toFixed(0);
+        time[5] = time.minutes < 2 ? "minute" : "minutes";
+    } else if (time[2] < 24) {
+        time[4] = time[2].toFixed(0);
+        time[5] = time.hours < 2 ? "hour" : "hours";
+    } else if (time[3] < 30) {
+        time[4] = time[3].toFixed(0);
+        time[5] = time.days < 2 ? "day" : "days";
+    }
+}
 
-export default function Article ({articleObject, subreddit, title, score, author,url}) {
+function renderMedia (type, articleData) {
+    if (!type && articleData.selftext) {
+        return (
+            <p className='article-text'>{articleData.selftext}</p>
+        )
+    } else if (type === "link") {
+        return
+    } else if (type === "image") {
+        return (
+            <img src={articleData.url} />
+        )
+    } else if (type === "hosted:video") {
+        return (
+            <video controls>
+                <source src={articleData.media.reddit_video.fallback_url} type="video/mp4" />
+            </video>
+        )
+    } else if (type === "rich:video") {
+        return
+    }
+}
+
+export default function Article ({articleData, type, subreddit, title, score, author}) {
     const dispatch = useDispatch();
     const article = useSelector(selectArticle);
+    const votes = score >= 1000? `${(score / 1000).toFixed(1)}k` : score;
+
+
+    const timeRightNow = Date.now();
+    const timeSincePost = [
+        (timeRightNow / 1000).toFixed(0) - articleData.created,
+        ((timeRightNow / 1000).toFixed(0) - articleData.created)/60,
+        (((timeRightNow / 1000).toFixed(0) - articleData.created)/60)/60,
+        (((timeRightNow / 1000).toFixed(0) - articleData.created)/60)/60/24
+    ]
+    formatTime(timeSincePost);
+
+    //if the article TITLE begins with a question, the first several comments should be loaded into the body.
 
     return (
         <div className="article">
             <div className="article-inner-container">
-                <h4><NavLink>r/{subreddit}</NavLink> by u/{author} {/* grab data here for username and time*/} hours ago </h4>
-                <div className="article-actions">
-                    <p>up</p>
-                    <p>{score}</p>
-                    <p>down</p>
+                <div className='article-subheader'><h4><NavLink>r/{subreddit}</NavLink> by u/{author} {/* grab data here for time*/} {timeSincePost[4]} {timeSincePost[5]} ago </h4></div>
+                
+                <div className="article-header">
+                    <h2 className='no-margin'>{title}</h2>
                 </div>
+
                 
                 <div className="article-body">
-                    <h2>{title}</h2>
-                    <p>IF THERE IS AN IMAGE, THE IMAGE WILL APPEAR HERE. IF IT IS JUST A BODY OF TEXT, THAT WILL ALSO APPEAR HERE,
-                    UNLESS IT IS SUPER LONG, THEN IT WILL JUST STOP AFTER A SET AMOUNT OF PAGE REAL ESTATE IS TAKEN UP AND THEN AN ELLIPSE
-                    AND "READ MORE" BUTTON WILL APPEAR AT THE BOTTOM WHERE YOU CAN CLICK IT EXPAND THE POST.
-                    <br></br>
-                    | <br></br>
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    <br></br>
-                    | <br></br>
-                    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"<br></br>
-                    </p>
+                    {renderMedia(type, articleData)}
+                </div>
+
+                <div className="article-actions">
+                        <p className='no-margin votes'>^ {votes} v</p>
+                        <p className='no-margin comments'>182 Comments</p>
                 </div>
             </div>
         </div>

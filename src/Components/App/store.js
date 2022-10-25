@@ -4,7 +4,7 @@ import articleReducer from '../Article/articleSlice';
 
 export const store = configureStore({
     reducer: {
-        feed: feedReducer,
+        feed: feedReducer, 
         article: articleReducer
     }
 });

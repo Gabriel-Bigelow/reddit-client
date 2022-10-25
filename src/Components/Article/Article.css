@@ -6,6 +6,7 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 5rem;
+    min-width: 100%;
 }
 .article::before {
     content: '';
@@ -21,19 +22,34 @@
 
 
 .article-inner-container {
-    display: grid;
-    grid-template: 40px 1fr / 3rem 1fr;
+    display: flex;
+    flex-direction: column;
     background-color: white;
     z-index: 1;
     width: 100%;
 }
 
 .article h4 {
-    grid-column: 1 / span 2;
-    background-color: rgb(6, 114, 249);
+    
     color: white;
     padding: .5rem 2.5%;
     margin: 0;
+}
+
+.article-subheader {
+    display: flex;
+    background-color: rgb(6, 114, 249);
+    align-content: center;
+}
+
+.article-header {
+    display: flex;
+    color: white;
+    background-color: rgb(50, 50, 50);
+    height: 100%;
+    grid-row: 2;
+    align-items: center;
+    padding: 2.5%;
 }
 
 .article a, .article a:visited{
@@ -41,13 +57,70 @@
 }
 
 .article-actions {
-    align-self: center;
-    justify-self: center;
+    display: flex;
     text-align: center;
+    background-color: rgb(151, 151, 151);
+    color: white;
+    height: 100%;
+    width: 100%;
+    padding: .5rem 0px;
+    align-items: center;
+    justify-content: space-around;
+    grid-row: 4;
+}
+
+/* .article-inner-container, .article-actions {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+} */
+
+.article-actions div {
+    display: grid;
+    align-content: center;
+    grid-template: 1fr / 1fr 1fr 1fr;
+}
+
+.votes {
+    grid-column: 1;
+}
+.comments {
+    grid-column: 3;
+}
+.votes:hover, .comments:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .article-body {
-    grid-row: 2;
-    grid-column: 2;
-    margin: 0px 2.5%;
+    display: flex;
+    grid-row: 3;
+    margin: 0;
+    background-color: rgb(151, 151, 151);
+    justify-content: center;
+}
+
+
+
+.article-body img {
+    max-width: 100%;
+    max-height: 600px;
+    margin: 0px;
+    padding: 0px;
+}
+.article-body video {
+    max-height: 600px;
+}
+
+
+
+
+.no-margin {
+    margin: 0;
+}
+.article-text{
+    color: white;
+    background-color: rgb(50, 50, 50);
+    padding: 1rem 2rem;
+    margin: 0px;
+    width: 100%;
 }
