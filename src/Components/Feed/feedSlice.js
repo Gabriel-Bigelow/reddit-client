@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loadArticle } from '../Article/articleSlice';
 
 export const loadFeedItems = createAsyncThunk(
     'feed/loadPosts',
-    async (dispatch) => {
+    async () => {
         const response = await fetch('https://www.reddit.com/.json');
         const jsonResponse = await response.json();
         return jsonResponse.data.children;
@@ -11,15 +10,17 @@ export const loadFeedItems = createAsyncThunk(
 )
 
 
+
 export const feedSlice = createSlice({
     name: 'feed',
     initialState: {
         articles: [],
-        isLoading: false,
-        hasError: false
+        articlesLoading: false,
+        articleHasError: false,
+        commentsLoading: false,
+        commentsHaveError: false,
     },
     reducers: {
-
     },
     extraReducers: {
         [loadFeedItems.pending]: (state, action) => {
@@ -35,11 +36,12 @@ export const feedSlice = createSlice({
         [loadFeedItems.rejected]: (state, action) => {
             state.isLoading = false;
             state.hasError = true;
-        }
+        },
     }
 })
 
+
 export const selectArticles = (state) => state.feed.articles;
-export const selectIsLoadingArticles = (state) => state.feed.isLoading;
+export const selectIsLoadingArticles = (state) => state.feed.articlesLoading;
 
 export default feedSlice.reducer;

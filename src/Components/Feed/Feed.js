@@ -1,20 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Article from "../Article/Article"
+import { preloadCommentsForArticle, selectComments } from "../Article/articleSlice";
 import './Feed.css'
 
-import { loadFeedItems, selectArticles, selectIsLoadingArticles } from './feedSlice';
+import { loadFeedItems, selectArticles, selectIsLoadingArticles} from './feedSlice';
 
 export default function Feed () {
     const dispatch = useDispatch();
     const articles = useSelector(selectArticles);
+    const comments = useSelector(selectComments);
     const isLoadingArticles = useSelector(selectIsLoadingArticles);
+    
+    
 
     useEffect(() => {
         if (articles.length === 0) {
             dispatch(loadFeedItems(dispatch));
         }
-    }, [articles, dispatch]);    
+        if (!isLoadingArticles && articles.length > 0) {
+            for (let article of articles) {
+                if(article.data.post_hint === 'link' || !article.data.post_hint) {
+                    dispatch(preloadCommentsForArticle(article.data.permalink))
+                }
+            }
+        }
+    }, [articles]);
+
+
 
     if (isLoadingArticles) {
         return (
@@ -29,9 +42,9 @@ export default function Feed () {
         <div id="articles-container">
             {/* come back to this and use .map() to populate the feed with articles */ }
             {articles.map(article => {
-                const { id, subreddit, title, author, selftext, score, url } = article.data;
+                const { id } = article.data;
                 return (
-                    <Article key={id} articleData={article.data} type={article.data.post_hint} subreddit={subreddit} title={title} author={author} body={selftext} score={score} url={url} />
+                    <Article key={id} articleData={article.data} comments={comments[`t3_${article.data.id}`]}  />
                 )
             })}
         </div>

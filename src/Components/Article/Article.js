@@ -1,23 +1,44 @@
 import './Article.css'
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectArticle, loadArticle } from './articleSlice';
+import { selectComments } from './articleSlice';
 import { useEffect } from 'react';
+import voteArrow from './voteArrow.svg';
 
-function formatTime (time) {
-    if (time[0] < 60 ) {
-        time[4] = time[0].toFixed(0);
-        time[5] = 'seconds'
-    } else if (time[1] < 60) {
-        time[4] = time[1].toFixed(0);
-        time[5] = time.minutes < 2 ? "minute" : "minutes";
-    } else if (time[2] < 24) {
-        time[4] = time[2].toFixed(0);
-        time[5] = time.hours < 2 ? "hour" : "hours";
-    } else if (time[3] < 30) {
-        time[4] = time[3].toFixed(0);
-        time[5] = time.days < 2 ? "day" : "days";
+function formatTime (time, timeRightNow) {
+    let timeToFormat = timeRightNow/1000 - time;
+
+    if (timeToFormat < 60) {
+        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "second" : "seconds"];
     }
+    
+    //seconds to minutes
+    timeToFormat /= 60;
+    if (timeToFormat < 60) {
+        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "minute" : "minutes"];
+    }
+
+    //minutes to hours
+    timeToFormat /= 60;
+    if (timeToFormat < 24) {
+        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "hour" : "hours"];
+    }
+
+    //hours to days
+    timeToFormat /= 24;
+    if (timeToFormat < 30) {
+        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "day" : "days"];
+    }
+
+    //days to months
+    timeToFormat /= 30;
+    if (timeToFormat < 12) {
+        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "month" : "months"];
+    }
+
+    //months to years
+    timeToFormat /= 12;
+    return [timeToFormat.toFixed(0), timeToFormat < 2 ? "year" : "years"];
 }
 
 function renderMedia (type, articleData) {
@@ -42,42 +63,67 @@ function renderMedia (type, articleData) {
     }
 }
 
-export default function Article ({articleData, type, subreddit, title, score, author}) {
+function renderComments (comments, timeRightNow) {
+    if (comments) {
+        return comments.map(({data}) => {
+            console.log(data)
+            const timeSinceComment = formatTime(data.created, timeRightNow)
+            return (
+                <div className='comment-container'>
+                    <div className='comment-info'>
+                        <h5 className='inline-block'>{data.author}</h5>
+                        <h6 className='inline-block'>{timeSinceComment[0]} {timeSinceComment[1]} ago</h6>
+                    </div>
+                    <div className='comment-text'>
+                        
+                        <div className="score-container">
+                            <img className="vote-arrow" src={voteArrow}/>
+                            <h6>{data.score >= 1000? `${(data.score / 1000).toFixed(1)}k` : data.score}</h6>
+                            <img className="vote-arrow rotate180" src={voteArrow}/>
+                        </div>
+                        <p>{data.body}</p>
+                    </div>
+                </div>
+            )
+        })
+    }
+}
+
+export default function Article ({articleData, comments}) {
     const dispatch = useDispatch();
-    const article = useSelector(selectArticle);
-    const votes = score >= 1000? `${(score / 1000).toFixed(1)}k` : score;
+    const votes = articleData.score >= 1000 ? `${(articleData.score / 1000).toFixed(1)}k` : articleData.score;
 
 
     const timeRightNow = Date.now();
-    const timeSincePost = [
-        (timeRightNow / 1000).toFixed(0) - articleData.created,
-        ((timeRightNow / 1000).toFixed(0) - articleData.created)/60,
-        (((timeRightNow / 1000).toFixed(0) - articleData.created)/60)/60,
-        (((timeRightNow / 1000).toFixed(0) - articleData.created)/60)/60/24
-    ]
-    formatTime(timeSincePost);
-
-    //if the article TITLE begins with a question, the first several comments should be loaded into the body.
+    const timeSincePost = formatTime(articleData.created, timeRightNow);
+    
 
     return (
         <div className="article">
             <div className="article-inner-container">
-                <div className='article-subheader'><h4><NavLink>r/{subreddit}</NavLink> by u/{author} {/* grab data here for time*/} {timeSincePost[4]} {timeSincePost[5]} ago </h4></div>
-                
+                <div className='article-subheader'><h4><NavLink>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
+                    
                 <div className="article-header">
-                    <h2 className='no-margin'>{title}</h2>
+                    <h2 className='no-margin'>{articleData.title}</h2>
                 </div>
-
-                
+    
+                    
                 <div className="article-body">
-                    {renderMedia(type, articleData)}
+                    {renderMedia(articleData.post_hint, articleData)}
                 </div>
 
+                <div className="article-comments">
+                    {renderComments(comments, timeRightNow)}
+                </div>
                 <div className="article-actions">
-                        <p className='no-margin votes'>^ {votes} v</p>
-                        <p className='no-margin comments'>182 Comments</p>
+                        <div className='no-margin votes-action'>
+                            <p className='no-margin'><img className="vote-arrow" src={voteArrow}/>{votes} <img className="vote-arrow rotate180" src={voteArrow}/></p>
+                        </div>
+                        <p className='no-margin comments-action'>182 Comments</p>
                 </div>
             </div>
         </div>
     )
+
+    
 }
