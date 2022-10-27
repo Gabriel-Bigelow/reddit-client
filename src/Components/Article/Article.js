@@ -1,7 +1,7 @@
 import './Article.css'
 import { NavLink, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectComments } from './articleSlice';
+import { SelectComments, addArticleIDForComments, preloadCommentsForArticle} from './articleSlice';
 import { useEffect } from 'react';
 import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
@@ -102,7 +102,7 @@ function renderMedia (type, articleData) {
             </video>
         )
     } else if (type === "rich:video") {
-        console.log(articleData.media_embed.content);
+        //console.log(articleData.media_embed.content);
     }
 }
 
@@ -111,8 +111,16 @@ const pageNotLoaded = () => {
 }
 
 function renderComments (comments, timeRightNow) {
-    if (comments) {
-        return comments.map(({data}) => {
+    if (comments && comments.comments) {
+        const commentsArray = [];
+        for (let comment of comments.comments) {
+            if (comment.kind === 't1' && comment.data.author !== 'AutoModerator' && commentsArray.length < comments.displayHowManyComments) {
+                commentsArray.push(comment);
+            }
+        }
+
+        return commentsArray.map(comment => {
+            const {data} = comment;
             const timeSinceComment = formatTime(data.created, timeRightNow)
             return <Comment key={data.id} data={data} timeSinceComment={timeSinceComment} voteArrow={voteArrow}/>
         })
@@ -123,17 +131,21 @@ function popoutImage ({target}) {
 
 }
 
-export default function Article ({articleData, comments}) {
+export default function Article ({articleData}) {
     const dispatch = useDispatch();
     const votes = articleData.score >= 1000 ? `${(articleData.score / 1000).toFixed(1)}k` : articleData.score;
-
+    const comments = SelectComments(`t3_${articleData.id}`);
 
     const timeRightNow = Date.now();
     const timeSincePost = formatTime(articleData.created, timeRightNow);
-    
 
 
-
+    useEffect(() => {
+        if(articleData.post_hint === 'link' || !articleData.post_hint) {
+            dispatch(addArticleIDForComments(articleData.id));
+            dispatch(preloadCommentsForArticle(articleData.permalink, articleData.id))
+        }
+    }, [articleData])
 
     return (
         <div className="article">

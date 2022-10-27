@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 export const loadFeedItems = createAsyncThunk(
     'feed/loadPosts',
     async () => {
-        const response = await fetch('https://www.reddit.com/.json');
+        const response = await fetch('https://www.reddit.com/.json?limit=5');
         const jsonResponse = await response.json();
         return jsonResponse.data.children;
     }
@@ -15,11 +15,7 @@ export const loadFeedItems = createAsyncThunk(
 export const feedSlice = createSlice({
     name: 'feed',
     initialState: {
-        articles: [],
-        articlesLoading: false,
-        articleHasError: false,
-        commentsLoading: false,
-        commentsHaveError: false,
+        articles: {},
     },
     reducers: {
     },
@@ -29,10 +25,10 @@ export const feedSlice = createSlice({
             state.hasError = false;
         },
         [loadFeedItems.fulfilled]: (state, action) => {
-            console.log(action.payload);
-
-            state.articles = action.payload;
-            //console.log(action.payload);
+            for (let article of action.payload) {
+                const { data } = article;
+                state.articles[data.id] = article;
+            }
             state.isLoading = false;
             state.hasError = false;
         },
