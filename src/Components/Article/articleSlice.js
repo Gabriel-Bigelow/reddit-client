@@ -2,18 +2,29 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 
 export const preloadCommentsForArticle = createAsyncThunk(
-    'feed/loadCommentsForArticlePreview',
+    'article/preloadCommentsForArticle',
     async (commentLink) => {
         const response = await fetch(`https://www.reddit.com${commentLink}.json`);
         const jsonResponse = await response.json();
         return jsonResponse[1].data.children.slice(0, 3);
     }
+);
+
+export const loadImageArrayForArticle = createAsyncThunk(
+    'article/loadImageArrayForArticle',
+    async (imageLink) => {
+        const response = await fetch(imageLink);
+        const jsonResponse = await response.json();
+        return jsonResponse;
+    }
 )
 
-export const articleSlice = createSlice({
-    name: 'article',
+
+export const articlesSlice = createSlice({
+    name: 'articles',
     initialState: {
-        commentsForArticleID: {}
+        commentsForArticleID: {},
+        imagesForArticleID: {}
     },
     reducers: {
         addArticleIDForComments: (state, action) => {
@@ -35,11 +46,29 @@ export const articleSlice = createSlice({
             state.commentsLoading = false;
             state.commentsHaveError = true;
         },
+
+
+
+
+        [loadImageArrayForArticle.pending]: (state, action) => {
+            state.imagesLoading = true;
+            state.imagesHaveError = false;
+        },
+        [loadImageArrayForArticle.fulfilled]: (state, action) => {
+            console.log(action.payload);
+            state.imagesLoading = false;
+            state.imagesHaveError = false;
+        },
+        [loadImageArrayForArticle.pending]: (state, action) => {
+            state.imagesLoading = false;
+            state.imagesHaveError = true;
+        },
     }
 });
 
-export const { addArticleIDForComments } = articleSlice.actions;
+export const { addArticleIDForComments } = articlesSlice.actions;
 
-export const selectArticle = (state) => state.article;
-export const selectComments = (state) => state.article.commentsForArticleID;
-export default articleSlice.reducer;
+export const selectArticle = (state) => state.articles;
+export const selectComments = (state) => state.articles.commentsForArticleID;
+export const selectImages = (state) => state.articles.imagesForArticleID
+export default articlesSlice.reducer;

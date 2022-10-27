@@ -1,9 +1,10 @@
 import './Article.css'
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectComments } from './articleSlice';
 import { useEffect } from 'react';
 import voteArrow from './voteArrow.svg';
+import Comment from '../Comment/Comment';
 
 function formatTime (time, timeRightNow) {
     let timeToFormat = timeRightNow/1000 - time;
@@ -41,52 +42,85 @@ function formatTime (time, timeRightNow) {
     return [timeToFormat.toFixed(0), timeToFormat < 2 ? "year" : "years"];
 }
 
+function formatURL (url) {
+    let urlCopy = url;
+
+    while (urlCopy.includes('&lt;')) {
+        urlCopy = urlCopy.replace('&lt;', '<');
+    }
+    while (urlCopy.includes('&gt;')) {
+        urlCopy = urlCopy.replace('&gt;', '>');
+    }
+    while (urlCopy.includes('&amp;')) {
+        urlCopy = urlCopy.replace('&amp;', '&');
+    }
+
+    return urlCopy
+}
+
 function renderMedia (type, articleData) {
+    //render text articles like r/AskReddit
     if (!type && articleData.selftext) {
+        if (articleData.selftext.includes('.com')) {
+            //console.log(articleData.selftext);
+        }
         return (
-            <p className='article-text'>{articleData.selftext}</p>
+            <p className='article-text'>{formatURL(articleData.selftext)}</p>
         )
-    } else if (type === "link") {
-        return
-    } else if (type === "image") {
+
+    //render image posts with more than 1 image
+    }
+    if (!type && !articleData.selftext && articleData.url.includes('/gallery')) {
         return (
-            <img src={articleData.url} />
+            <p className='article-text'>FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME
+            </p>
+        )
+    } /*else if (type === "link") {
+        if (articleData.preview.reddit_video_preview) {
+            return (
+                <video controls autoPlay muted loop>
+                    <source src={articleData.preview.reddit_video_preview.fallback_url} type="video/mp4"/>
+                </video>
+            )
+        }
+        else {
+            return (
+                <div className="article-link-and-frame">
+                    <a className='article-text out-link' href={articleData.url} target="_blank">{articleData.url}</a>
+                    <iframe src={articleData.url}></iframe>
+                </div>
+            )
+        } 
+    } */ else if (type === "image") {
+        return (
+                <img src={articleData.url} alt={articleData.title}/>
         )
     } else if (type === "hosted:video") {
         return (
-            <video controls>
+            <video controls autoPlay muted loop>
                 <source src={articleData.media.reddit_video.fallback_url} type="video/mp4" />
             </video>
         )
     } else if (type === "rich:video") {
-        return
+        console.log(articleData.media_embed.content);
     }
+}
+
+const pageNotLoaded = () => {
+    return;
 }
 
 function renderComments (comments, timeRightNow) {
     if (comments) {
         return comments.map(({data}) => {
-            console.log(data)
             const timeSinceComment = formatTime(data.created, timeRightNow)
-            return (
-                <div className='comment-container'>
-                    <div className='comment-info'>
-                        <h5 className='inline-block'>{data.author}</h5>
-                        <h6 className='inline-block'>{timeSinceComment[0]} {timeSinceComment[1]} ago</h6>
-                    </div>
-                    <div className='comment-text'>
-                        
-                        <div className="score-container">
-                            <img className="vote-arrow" src={voteArrow}/>
-                            <h6>{data.score >= 1000? `${(data.score / 1000).toFixed(1)}k` : data.score}</h6>
-                            <img className="vote-arrow rotate180" src={voteArrow}/>
-                        </div>
-                        <p>{data.body}</p>
-                    </div>
-                </div>
-            )
+            return <Comment key={data.id} data={data} timeSinceComment={timeSinceComment} voteArrow={voteArrow}/>
         })
     }
+}
+
+function popoutImage ({target}) {
+
 }
 
 export default function Article ({articleData, comments}) {
@@ -97,6 +131,9 @@ export default function Article ({articleData, comments}) {
     const timeRightNow = Date.now();
     const timeSincePost = formatTime(articleData.created, timeRightNow);
     
+
+
+
 
     return (
         <div className="article">
@@ -117,7 +154,7 @@ export default function Article ({articleData, comments}) {
                 </div>
                 <div className="article-actions">
                         <div className='no-margin votes-action'>
-                            <p className='no-margin'><img className="vote-arrow" src={voteArrow}/>{votes} <img className="vote-arrow rotate180" src={voteArrow}/></p>
+                            <p className='no-margin'><img className="vote-arrow" src={voteArrow} alt="upvote"/>{votes} <img className="vote-arrow rotate180" src={voteArrow} alt="downvote"/></p>
                         </div>
                         <p className='no-margin comments-action'>182 Comments</p>
                 </div>

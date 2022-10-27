@@ -5,3 +5,11 @@
     margin: 2.5% 10%;
     gap: 5%;
 }
+
+.out-link {
+    text-decoration: underline;
+}
+
+.out-link:hover {
+    cursor: pointer;
+}

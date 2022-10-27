@@ -70,45 +70,63 @@
     grid-row: 4;
 }
 
-/* .article-inner-container, .article-actions {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-} */
+.article-inner-container, .article-actions {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+} 
+.article-inner-container, .article-subheader {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
 
 
 
 .article-body {
-    display: flex;
+    display: grid;
+    grid-template: 1fr / 100%;
     grid-row: 3;
     margin: 0;
     background-color: rgb(50, 50, 50);
     justify-content: center;
+    width: 100%;
 }
 
+.article-link-and-frame{
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 100%;
+    overflow:hidden;
+    overflow-x: hidden;
+}
+.article-link-and-frame iframe {
+    width: 102%;
+    height: 618px;
+}
 
+.article-text {
+    color: white;
+    background-color: rgb(50, 50, 50);
+    padding: 1rem 2rem;
+    margin: 0px;
+    word-wrap: break-word;
+}
 
 .article-body img {
     max-width: 100%;
     max-height: 600px;
     margin: 0px;
     padding: 0px;
+    cursor: pointer;
+    justify-self: center;
 }
 .article-body video {
     max-height: 600px;
     max-width: 100%;
+    justify-self: center;
 }
 
 
-
-
-
-.article-text{
-    color: white;
-    background-color: rgb(50, 50, 50);
-    padding: 1rem 2rem;
-    margin: 0px;
-    width: 100%;
-}
 
 .article-comments {
     background-color: rgb(50, 50, 50);
@@ -126,7 +144,7 @@
 .comment-info {
     display: flex;
     align-content: center;
-    margin-left: 1.25rem;
+    margin-left: 5%;
     padding-left: 1rem;
 }
 
@@ -136,7 +154,7 @@
     margin: 0 1rem 0 0;
 }
 
-.comment-info .score-container {
+.score-container {
     display: inline-flex;
     flex-direction: column;
     min-width: 2.25rem;
@@ -150,13 +168,17 @@
 }
 
 .comment-text {
-    display: flex;
+    display: grid;
     margin-top: 0px;
     align-items: center;
+    max-width: 100%;
+    word-wrap: break-word;
+    grid-template: 1fr / 5% 95%;
 }
 .comment-text p {
     margin: 0px;
     padding-left: 1rem;
+    max-width: 100%;
 }
 
 

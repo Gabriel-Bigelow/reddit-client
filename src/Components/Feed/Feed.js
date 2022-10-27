@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import Article from "../Article/Article"
-import { preloadCommentsForArticle, selectComments } from "../Article/articleSlice";
+import { loadImageArrayForArticle, preloadCommentsForArticle, selectComments } from "../Article/articleSlice";
 import './Feed.css'
 
 import { loadFeedItems, selectArticles, selectIsLoadingArticles} from './feedSlice';
@@ -12,13 +12,13 @@ export default function Feed () {
     const comments = useSelector(selectComments);
     const isLoadingArticles = useSelector(selectIsLoadingArticles);
     
-    
 
     useEffect(() => {
         if (articles.length === 0) {
             dispatch(loadFeedItems(dispatch));
         }
         if (!isLoadingArticles && articles.length > 0) {
+            console.log(articles);
             for (let article of articles) {
                 if(article.data.post_hint === 'link' || !article.data.post_hint) {
                     dispatch(preloadCommentsForArticle(article.data.permalink))

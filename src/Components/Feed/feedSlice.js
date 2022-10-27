@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 
 export const loadFeedItems = createAsyncThunk(
     'feed/loadPosts',
@@ -28,8 +29,10 @@ export const feedSlice = createSlice({
             state.hasError = false;
         },
         [loadFeedItems.fulfilled]: (state, action) => {
-            state.articles = action.payload;
             console.log(action.payload);
+
+            state.articles = action.payload;
+            //console.log(action.payload);
             state.isLoading = false;
             state.hasError = false;
         },
@@ -40,6 +43,11 @@ export const feedSlice = createSlice({
     }
 })
 
+
+
+export const SelectArticle = (id) => {
+    return useSelector((state) => state.feed.articles[id]);
+}
 
 export const selectArticles = (state) => state.feed.articles;
 export const selectIsLoadingArticles = (state) => state.feed.articlesLoading;
