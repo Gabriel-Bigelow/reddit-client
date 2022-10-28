@@ -144,7 +144,7 @@
 .comment-info {
     display: flex;
     align-content: center;
-    margin-left: 5%;
+    margin-left: 2.5rem;
     padding-left: 1rem;
 }
 
@@ -155,11 +155,11 @@
 }
 
 .score-container {
-    display: inline-flex;
+    display: inline-grid;
     flex-direction: column;
-    min-width: 2.25rem;
     justify-items: center;
     align-items: center;
+    min-width: 2.5rem;
 }
 
 .score-container h6 {
@@ -173,7 +173,7 @@
     align-items: center;
     max-width: 100%;
     word-wrap: break-word;
-    grid-template: 1fr / 5% 95%;
+    grid-template: 1fr / 2.5rem minmax(auto , 95%);
 }
 .comment-text p {
     margin: 0px;
