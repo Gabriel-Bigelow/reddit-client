@@ -86,19 +86,50 @@ export const Reddit = {
     },
     
     async postAccessToken (code) {
-        const userpass = base64_encode(`${clientID}:${secret}`);
-        console.log(userpass);
-        const response = await fetch(`https://reddit.com/api/v1/access_token`, {
-            headers: {
-                "Authorization": `Basic ${userpass}`,
-            },
+        const userpass = base64_encode(clientID + ":" + secret);
+        const headers = { 
+            'Authorization': `Basic ${userpass}`, 
+            'User_Agent': "Lurker 0.1.0 by /u/Bonechiller0",
+            'Content-Type': "application/x-www-form-urlencoded"        
+        };
+        const params = {
+            grant_type: "authorization_code",
+            code: code,
+            redirect_uri: redirectURI
+        }
+        let formBody = [];
+        
+        
+        for (let property in params) {
+            //let encodedKey = property;
+            //let encodedValue = params[property];
+            let encodedKey = encodeURIComponent(property);
+            let encodedValue = encodeURIComponent(params[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+        
+        formBody = formBody.join('&');
+        console.log(formBody);
+        console.log(code);
+
+        
+
+
+        
+        let form = new FormData();
+        form.append('code', code);
+        form.append('grant_type', 'authorization_code');
+        form.append('redirect_uri', redirectURI);
+
+
+        const options = {
             method: "POST",
-            body: new URLSearchParams({
-                "grant_type": "authorization_code", 
-                "code": code,
-                "redirect_uri": redirectURI
-            }),
-        });
+            body: formBody,
+            headers: headers
+        }
+        
+
+        const response = await fetch(`/access_token`, options);
         const jsonResponse = await response.json();
         console.log(jsonResponse);
         return await jsonResponse;

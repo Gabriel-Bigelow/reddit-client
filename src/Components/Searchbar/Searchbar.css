@@ -1,18 +1,21 @@
 #nav-bar {
     display: flex;
-    grid-template: 2.5rem / 1fr 1fr 1fr;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    z-index: 100;
     background-color: rgb(6, 114, 249);
     padding: 0 1.25rem;
     align-items: center;
-    justify-content: space-between
 }
 
 .inner {
-    margin: 0 .625rem;
+    margin: .25rem 0;
 }
 
 #header {
     display: inline-block;
+    margin: 0px;
 }
 
 #header, .nav-bar-link{
@@ -36,15 +39,37 @@
 #center-flex {
     display: grid;
     grid-template: 1fr / 1000000000000000fr 1fr;
+    width: 0px;
+    position: absolute;
+    left: 50%;
+    justify-content: center;
 }
 
 
 
-#nav-bar img {
-    height: 3.125rem;
-    width: 3.125rem;
+#nav-logo {
+    height: 2.5rem;
+    width: 2.5rem;
     justify-self: left;
-    padding: .625rem;
+}
+#night-mode-button {
+    display: flex;
+    grid-template: 1fr / 1fr 1fr;
+    background-color: white;
+    padding: .5rem;;
+    align-items: center;
+    gap: .35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 1000px;
+    margin-left: 2rem;
+    margin-right: 0.5rem;
+}
+#night-mode-logo {
+    height: 1.2rem;
+    width: 1.2rem;
+    z-index: 100000000000;
 }
 
 #searchbar {
@@ -52,8 +77,7 @@
     background-size: contain;
     height: 2rem;
     width: 18.75rem;
-    padding: .625rem 3.125rem .625rem 1.25rem;
-    padding-right: 3.125rem;
+    padding: .375rem 3.125rem;
     font-size: 1rem;
     background-color: rgb(230, 230, 230);
     border-radius: 6.25rem;
@@ -63,11 +87,11 @@
 }
 
 #searchbar:focus {
-    background-color: rgb(248, 248, 248);
+    background-color: rgb(255, 255, 255);
     width: 28.125rem;
 }
 
-#nav-bar button {
+#log-in-button {
     font-size: 1rem;
     font-weight: 600;
     color: rgb(6, 114, 249);
@@ -78,6 +102,7 @@
 }
 #nav-bar button:hover {
     cursor:pointer;
+    background-color: white;
 }
 #nav-bar button:active {
     background-color:rgb(230, 230, 230);

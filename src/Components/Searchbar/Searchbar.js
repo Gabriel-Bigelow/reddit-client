@@ -3,9 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import logo from './logo.png';
-import { Reddit, selectReddit, setDuration, setCode, setScope, randomState, selectCode, selectDuration, selectScope, selectState, selectAuth, selectTest, redditSlice, setSendRequest, setRequest, selectSendRequest, selectRequest, selectAll, setAccessToken, selectAccessToken} from '../App/Reddit';
-
-import { selectArticles } from '../Feed/feedSlice';
+import picNightMode from '../../images/nightMode.png';
+import { toggleNightMode } from '../../features/nightMode';
 
 
 
@@ -20,18 +19,20 @@ function renderAccount (loggedIn, handleClick) {
     } else {
         return (
             <div className="inner" id="right-flex">
-                <button onClick={handleClick}>Log In</button>
+                <button id="log-in-button" onClick={handleClick}>Log In</button>
             </div>
         )
     }
 }
 
 
+
+
 export default function Searchbar () {
     const dispatch = useDispatch();
     const loggedIn = false;
 
-    const auth = useSelector(selectAuth);
+    /*const auth = useSelector(selectAuth);
     const sendRequest = useSelector(selectSendRequest);
     const request = useSelector(selectRequest);
     const accessToken = useSelector(selectAccessToken);
@@ -52,8 +53,7 @@ export default function Searchbar () {
     function handleRequest () {
         if (sendRequest) {
             dispatch(setSendRequest(false));
-            Reddit.postAccessToken();
-            //Reddit[request](auth.code, auth.state, auth.duration, auth.scope);
+            Reddit[request](auth.code, auth.state, auth.duration, auth.scope);
         } else {
             if (window.location.href.match(/code=([^&]*)/)) {
                 const word = 'code='
@@ -63,10 +63,8 @@ export default function Searchbar () {
             }
         }
     }
-    handleRequest();
-
-
-
+    handleRequest();*/
+    
 
 
 
@@ -78,6 +76,7 @@ export default function Searchbar () {
                 <h1 id="header">Lurker</h1>
             </div>
             
+            <button id="night-mode-button" onClick={toggleNightMode}><img id="night-mode-logo" src={picNightMode} /> Night Mode</button>
             
             <div className="inner" id="center-flex">
                 <form>
@@ -85,7 +84,10 @@ export default function Searchbar () {
                 </form>
                 <NavLink className="nav-bar-link">Popular</NavLink>
             </div>
-            {renderAccount(loggedIn, handleLogIn)}
+            {/*renderAccount(loggedIn)
+            remove this lower div later on. It's just there to satisfy styling issues until you figure out how to 
+            create a backend that handles requests for the Reddit API*/}
+            <div></div>
 
         </nav>
     )

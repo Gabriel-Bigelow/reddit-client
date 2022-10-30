@@ -1,7 +1,5 @@
 import React from 'react';
-import { 
-  BrowserRouter as Router,
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import './App.css'
 import Searchbar from '../Searchbar/Searchbar';
@@ -14,9 +12,11 @@ function App() {
   return ( 
     <Router>
       <Searchbar />
+      <SubredditsBar />
       <div id="body-container">
+        
         <Feed />
-        <SubredditsBar />
+        
       </div>
     </Router>
   );

@@ -1,9 +1,13 @@
+body {
+    transition-duration: 0.5s;
+}
 #body-container {
     display: flex;
     justify-content: center;
     align-content: top;
-    margin: 2.5% 10%;
-    gap: 5%;
+    margin: 6% 0;
+    gap: 2.5%;
+    position: absolute;
 }
 
 .out-link {

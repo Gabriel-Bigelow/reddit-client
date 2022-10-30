@@ -4,7 +4,9 @@ import './SubredditsBar.css';
 export default function SubredditsBar () {
     return (
         <div id='subreddits-container'>
-            <div >
+            
+            <div id="subreddits-and-shadow-holder">
+                <div id='subreddits-shadow'></div>
                 <div className='subreddits'>
                     <div id="subreddits-inner-container">
                         <h1>Subreddits</h1>

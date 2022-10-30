@@ -149,6 +149,7 @@ export default function Article ({articleData}) {
 
     return (
         <div className="article">
+            <div id='article-shadow'></div>
             <div className="article-inner-container">
                 <div className='article-subheader'><h4><NavLink>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
                     
