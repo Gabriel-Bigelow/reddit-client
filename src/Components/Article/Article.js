@@ -6,57 +6,8 @@ import { useEffect } from 'react';
 import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
 
-function formatTime (time, timeRightNow) {
-    let timeToFormat = timeRightNow/1000 - time;
+import { formatTime, decodeURL } from '../../features/formatting'
 
-    if (timeToFormat < 60) {
-        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "second" : "seconds"];
-    }
-    
-    //seconds to minutes
-    timeToFormat /= 60;
-    if (timeToFormat < 60) {
-        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "minute" : "minutes"];
-    }
-
-    //minutes to hours
-    timeToFormat /= 60;
-    if (timeToFormat < 24) {
-        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "hour" : "hours"];
-    }
-
-    //hours to days
-    timeToFormat /= 24;
-    if (timeToFormat < 30) {
-        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "day" : "days"];
-    }
-
-    //days to months
-    timeToFormat /= 30;
-    if (timeToFormat < 12) {
-        return [timeToFormat.toFixed(0), timeToFormat < 2 ? "month" : "months"];
-    }
-
-    //months to years
-    timeToFormat /= 12;
-    return [timeToFormat.toFixed(0), timeToFormat < 2 ? "year" : "years"];
-}
-
-function formatURL (url) {
-    let urlCopy = url;
-
-    while (urlCopy.includes('&lt;')) {
-        urlCopy = urlCopy.replace('&lt;', '<');
-    }
-    while (urlCopy.includes('&gt;')) {
-        urlCopy = urlCopy.replace('&gt;', '>');
-    }
-    while (urlCopy.includes('&amp;')) {
-        urlCopy = urlCopy.replace('&amp;', '&');
-    }
-
-    return urlCopy
-}
 
 function renderMedia (type, articleData) {
     //render text articles like r/AskReddit
@@ -65,7 +16,7 @@ function renderMedia (type, articleData) {
             //console.log(articleData.selftext);
         }
         return (
-            <p className='article-text'>{formatURL(articleData.selftext)}</p>
+            <p className='article-text'>{decodeURL(articleData.selftext)}</p>
         )
 
     //render image posts with more than 1 image
@@ -169,7 +120,7 @@ export default function Article ({articleData}) {
                         <div className='no-margin votes-action'>
                             <p className='no-margin'><img className="vote-arrow" src={voteArrow} alt="upvote"/>{votes} <img className="vote-arrow rotate180" src={voteArrow} alt="downvote"/></p>
                         </div>
-                        <p className='no-margin comments-action'>182 Comments</p>
+                        <p className='no-margin action-comments'>182 Comments</p>
                 </div>
             </div>
         </div>

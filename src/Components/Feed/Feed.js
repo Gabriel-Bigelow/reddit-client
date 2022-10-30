@@ -6,7 +6,6 @@ import { selectImages, selectTest } from '../Article/articleSlice';
 
 
 import { loadFeedItems, selectArticles, selectIsLoadingArticles} from './feedSlice';
-import { changeSomethingHere, selectSomethingHere } from "../Reddit/redditSlice";
 
 export default function Feed () {
     const dispatch = useDispatch();

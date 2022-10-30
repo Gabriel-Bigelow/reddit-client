@@ -17,3 +17,11 @@ body {
 .out-link:hover {
     cursor: pointer;
 }
+
+.border-top {
+    border-top: solid gray 1px;
+}
+.horizontal-rule {
+    border-bottom: solid gray 1px;
+    margin-bottom: 0.5rem;
+}

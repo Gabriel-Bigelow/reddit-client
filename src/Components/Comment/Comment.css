@@ -1,0 +1,39 @@
+.comment-info {
+    display: flex;
+    align-content: center;
+    margin-left: 2.5rem;
+    padding-left: 1rem;
+}
+
+.comment-info .inline-block {
+    display: inline-block;
+    align-self: center;
+    margin: 0 1rem 0 0;
+}
+
+.score-container {
+    display: inline-grid;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    min-width: 2.5rem;
+}
+
+.score-container h6 {
+    margin: 0px;
+    text-align:center;
+}
+
+.comment-text {
+    display: grid;
+    margin-top: 0px;
+    align-items: center;
+    max-width: 100%;
+    word-wrap: break-word;
+    grid-template: 1fr / 2.5rem minmax(auto , 95%);
+}
+.comment-text p {
+    margin: 0px;
+    padding-left: 1rem;
+    max-width: 100%;
+}

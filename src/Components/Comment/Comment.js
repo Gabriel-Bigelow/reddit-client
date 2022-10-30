@@ -1,4 +1,14 @@
+import { decodeURL, formatMarkdown } from "../../features/formatting";
+import './Comment.css'
+
 export default function Comment ({data, timeSinceComment, voteArrow}) {
+
+    function renderFormattedCommentBody (text) {
+        const formattedText = formatMarkdown(text);
+        return formattedText.map(element => element)
+    }
+
+
 
     return (
         <div className='comment-container' key={data.id} id={data.id}>
@@ -15,7 +25,7 @@ export default function Comment ({data, timeSinceComment, voteArrow}) {
                     </div>
                     <img className="vote-arrow rotate180" src={voteArrow} alt="downvote"/>
                 </div>
-                <p>{data.body}</p>
+                <div>{renderFormattedCommentBody(data.body)}</div>
             </div>
         </div>
     )

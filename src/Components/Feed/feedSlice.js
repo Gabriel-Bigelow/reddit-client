@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 export const loadFeedItems = createAsyncThunk(
     'feed/loadPosts',
     async () => {
-        const response = await fetch('https://www.reddit.com/.json?limit=5');
+        const response = await fetch('https://www.reddit.com/.json?limit=100');
         const jsonResponse = await response.json();
         return jsonResponse.data.children;
     }
