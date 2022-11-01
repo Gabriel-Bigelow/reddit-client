@@ -1,3 +1,5 @@
+
+
 export function decodeURL (url) {
     let urlCopy = url;
 
@@ -15,6 +17,50 @@ export function decodeURL (url) {
     }
 
     return urlCopy
+}
+
+export function encodeURL (string) {
+    let newString = string;
+    while (newString.includes('%')) {
+        newString = newString.replace('%', 'percentSignGoesHere25');
+    }
+    while (newString.includes(' ')) {
+        newString = newString.replace(' ', '%20');
+    }
+    while (newString.includes('#')) {
+        newString = newString.replace('#', '%23');
+    }
+    while (newString.includes('$')) {
+        newString = newString.replace('$', '%24');
+    }
+    while (newString.includes('&')) {
+        newString = newString.replace('&', '%26');
+    }
+    while (newString.includes('@')) {
+        newString = newString.replace('@', '%40');
+    }
+    while (newString.includes(':')) {
+        newString = newString.replace(':', '%3A');
+    }
+    while (newString.includes('?')) {
+        newString = newString.replace('?', '%3F');
+    }
+    while (newString.includes('^')) {
+        newString = newString.replace('^', '%5E');
+    }
+    while (newString.includes('{')) {
+        newString = newString.replace('{', '%7B');
+    }
+    while (newString.includes('|')) {
+        newString = newString.replace('|', '%7C');
+    }
+    while (newString.includes('}')) {
+        newString = newString.replace('}', '%7D');
+    }
+    while (newString.includes('percentSignGoesHere25')) {
+        newString = newString.replace('percentSignGoesHere25', '%25');
+    }
+    return newString;
 }
 
 export function formatTime (time, timeRightNow) {
@@ -53,8 +99,64 @@ export function formatTime (time, timeRightNow) {
     return [timeToFormat.toFixed(0), timeToFormat < 2 ? "year" : "years"];
 }
 
-export function formatMarkdown (text) {
-    //formatting must go in the order of most symbols to surround a string to least
+export function extraFormatMarkdown (text) {
+
+    function formatLinks (text) {
+        const linkRegex = /\[.*?\]\(.*?\)/
+		const textRegex = /\[.*?\]/
+        const hrefRegex = /http.*?\)/
+        
+        const soloHrefRegex = /http.*?\s/
+
+        const endHrefRegex = /http.*?\z/
+  
+        let newText = text + ' ';
+        const linksArray = [];
+        const soloLinksArray = [];
+        const endLinksArray = [];
+        while (newText.match(linkRegex) !== null) {
+            const foundWholeLink = newText.match(linkRegex);
+            const stringWholeLink = foundWholeLink.join();
+
+            const foundText = stringWholeLink.match(textRegex);
+            const stringText = foundText.join();
+            const formattedLinkText = stringText.slice(1, stringText.length-1);
+
+            const foundHref = stringWholeLink.match(hrefRegex);
+            const stringHref = foundHref.join();
+            const formattedHref = stringHref.slice(0, stringHref.length-1);
+
+            const linkObject = {text: formattedLinkText, href: formattedHref};
+            linksArray.push(linkObject);
+
+          	newText = newText.replace(linkRegex, 'formattedLinkGoesRightHere');
+        }
+        while (newText.match(soloHrefRegex) !== null) {
+            const foundHref = newText.match(soloHrefRegex);
+            const stringHref = foundHref.join();
+            const formattedHref = stringHref.slice(0, stringHref.length-1);
+
+            const linkObject = {text: formattedHref, href: formattedHref};
+            soloLinksArray.push(linkObject);
+
+          	newText = newText.replace(soloHrefRegex, 'FormattedSoloLinkGoesRightHere');
+        }
+
+        for(let link of linksArray) {
+            newText = newText.replace('formattedLinkGoesRightHere', `[${link.text}](${link.href})`);
+        }
+        for(let link of soloLinksArray) {
+            newText = newText.replace('FormattedSoloLinkGoesRightHere', `[${link.text}](${link.href})`);
+        }
+
+        return newText;
+    }
+    let newText = decodeURL(text);
+    newText = formatLinks(newText);
+    return newText
+}
+
+/*//formatting must go in the order of most symbols to surround a string to least
     const htmlItems = [];
     const newTextArray = [];
 
@@ -73,9 +175,9 @@ export function formatMarkdown (text) {
         return newText;
     }
     function formatBold (text, doubleFormatting) {
-        const boldRegex = /\*\*.*?\*\*/;
+        const boldRegex = /\*\*.*?\*\*/;                    // */
 
-        let newText = text;
+        /*let newText = text;
         while (newText.match(boldRegex) !== null) {
             const insertAt = newText.search(boldRegex);
             const foundPhrase = newText.match(boldRegex);
@@ -99,9 +201,9 @@ export function formatMarkdown (text) {
         return newText;
     }
     function formatItalics (text, doubleFormatting) {
-        const italicsRegex = /\*.*?\*/;
+        const italicsRegex = /\*.*?\*/;                 // */
 
-        let newText = text;
+        /*let newText = text;
         while (newText.match(italicsRegex) !== null) {
             const insertAt = newText.search(italicsRegex);
             const foundPhrase = newText.match(italicsRegex);
@@ -198,7 +300,7 @@ export function formatMarkdown (text) {
     newText = formatHorizontalRule(newText);
     //newText = formatBold(newText);
     newText = formatLinks(newText);
-    newText = formatItalics(newText);
+    //newText = formatItalics(newText);
     //newText = formatStrikethrough(newText);
     //newText = formatSuperscript(newText);
     
@@ -234,7 +336,4 @@ export function formatMarkdown (text) {
         })}</p>)
     }
     populateHTMLItems(newTextArray);
-    console.log(htmlItems);
-
-    return htmlItems;
-}
+    console.log(htmlItems);*/

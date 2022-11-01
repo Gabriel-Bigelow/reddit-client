@@ -1,12 +1,25 @@
+#pulltab {
+    position: fixed;
+    display: grid;
+    top: -70px;
+    left:50%;
+    justify-content: center;
+    width: 0;
+    transition-duration: 1s;
+    z-index: 0;
+}
+
 #nav-bar {
     display: flex;
     position: fixed;
     width: 100%;
-    top: 0px;
+    top: 0%;
     z-index: 100;
     background-color: rgb(6, 114, 249);
     padding: 0 1.25rem;
     align-items: center;
+    transition-duration: 0.5s;
+    z-index: 100;
 }
 
 .inner {
@@ -69,7 +82,7 @@
 #night-mode-logo {
     height: 1.2rem;
     width: 1.2rem;
-    z-index: 100000000000;
+    z-index: 100;
 }
 
 #searchbar {

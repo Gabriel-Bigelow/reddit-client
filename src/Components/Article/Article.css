@@ -40,15 +40,24 @@
     display: flex;
     background-color: rgb(6, 114, 249);
     align-content: center;
+    transition-duration: 0.5s;
+}
+.article-subheader:hover {
+    background-color: rgb(6, 80, 200);
 }
 
 .article-header {
     display: flex;
     color: white;
+    background-color: rgb(25, 25, 25);
     height: 100%;
     grid-row: 2;
     align-items: center;
     padding: 2.5%;
+    transition-duration: 0.5s;
+}
+.article-header:hover {
+    
 }
 
 .article a, .article a:visited{
@@ -86,6 +95,10 @@
     margin: 0;
     justify-content: center;
     width: 100%;
+    transition-duration: 0.5s;
+}
+.article-body:hover {
+    background-color: rgb(30, 30, 30);
 }
 
 .article-link-and-frame{
@@ -130,7 +143,11 @@
 .article-comments .comment-container {
     color: white;
     margin: 0px;
-    padding: 1rem 3.5rem 1rem 1rem;
+    padding: 1rem;
+    transition-duration: 0.5s;
+}
+.comment-container:hover {
+    background-color: rgb(30, 30, 30);
 }
 
 

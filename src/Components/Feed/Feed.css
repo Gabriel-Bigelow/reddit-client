@@ -6,3 +6,10 @@
     margin: 0;
     width: 70%;
 }
+#loading-message {
+    height: 100%;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+}

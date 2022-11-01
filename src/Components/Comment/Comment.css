@@ -32,8 +32,17 @@
     word-wrap: break-word;
     grid-template: 1fr / 2.5rem minmax(auto , 95%);
 }
-.comment-text p {
-    margin: 0px;
+
+.comment-text h2{
+    margin: .25rem 0 1rem 0;
     padding-left: 1rem;
     max-width: 100%;
+    grid-column: 2;
+}
+
+.comment-text p{
+    margin: .25rem 0px;
+    padding-left: 1rem;
+    max-width: 100%;
+    grid-column: 2;
 }

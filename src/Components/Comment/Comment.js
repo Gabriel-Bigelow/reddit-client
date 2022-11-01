@@ -1,13 +1,10 @@
-import { decodeURL, formatMarkdown } from "../../features/formatting";
+import { extraFormatMarkdown } from "../../features/formatting";
+import ReactMarkdown from 'react-markdown';
 import './Comment.css'
 
 export default function Comment ({data, timeSinceComment, voteArrow}) {
 
-    function renderFormattedCommentBody (text) {
-        const formattedText = formatMarkdown(text);
-        return formattedText.map(element => element)
-    }
-
+    const formattedData = extraFormatMarkdown(data.body);
 
 
     return (
@@ -25,7 +22,9 @@ export default function Comment ({data, timeSinceComment, voteArrow}) {
                     </div>
                     <img className="vote-arrow rotate180" src={voteArrow} alt="downvote"/>
                 </div>
-                <div>{renderFormattedCommentBody(data.body)}</div>
+                <div>
+                    <ReactMarkdown children={formattedData}></ReactMarkdown>
+                </div>
             </div>
         </div>
     )
