@@ -5,7 +5,7 @@ export const searchForArticles = createAsyncThunk(
     'feed/search',
     async (term) => {
         const searchTerm = encodeURL(term);
-        const response = await fetch(`https://www.reddit.com/search.json?q=${searchTerm}`)
+        const response = await fetch(`https://www.reddit.com/search.json?q=${searchTerm}&limit=5`)
         const jsonResponse = await response.json();
         return jsonResponse;
     }
@@ -15,7 +15,7 @@ const searchSlice = createSlice({
     name: 'search',
     initialState: {
         term: '',
-        returnedSearch: [],
+        returnedSearch: {},
         isLoading: false,
         hasError: false
     },
@@ -24,7 +24,7 @@ const searchSlice = createSlice({
             state.term = action.payload;
         },
         clearSearchObjects: (state, action) => {
-            state.returnedSearch = [];
+            state.returnedSearch = {};
         }
     },
     extraReducers: {
@@ -33,7 +33,11 @@ const searchSlice = createSlice({
             state.isLoading = true;
         },
         [searchForArticles.fulfilled]: (state, action) => {
-            state.returnedSearch = action.payload.data.children;
+            const searchArray = action.payload.data.children;
+            for (let article of searchArray) {
+                const { data } = article;
+                state.returnedSearch[data.id] = article;
+            }
             state.isLoading = false;
             state.hasError = false;
         },

@@ -1,3 +1,6 @@
+html {
+    scroll-behavior: smooth;
+}
 body {
     transition-duration: 0.5s;
 }
@@ -12,6 +15,11 @@ body::-webkit-scrollbar-thumb {
     background-color: rgb(50, 50, 50);
     border:1px solid rgb(6, 114, 249);
     border-radius: 2px
+}
+
+a, a:visited{
+    font-size: 1rem;
+    color: rgb(30, 255, 155);
 }
 
 #body-container {

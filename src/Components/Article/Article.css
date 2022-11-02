@@ -60,9 +60,7 @@
     
 }
 
-.article a, .article a:visited{
-    color: rgb(30, 255, 155);
-}
+
 
 .article-actions {
     display: flex;

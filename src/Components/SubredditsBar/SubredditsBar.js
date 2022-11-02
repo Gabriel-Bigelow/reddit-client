@@ -1,20 +1,31 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { clearCommentsforArticleID } from '../Article/articleSlice';
+import { clearArticles, setArticles, setShowPage } from '../Feed/feedSlice';
 import './SubredditsBar.css';
-import { loadSubreddits, selectSubreddits } from './subredditsBarSlice';
+import { loadSubreddits, loadSubredditPage, selectSubreddits, selectReturnedSubredditData, selectSelectedSubreddit, setSelectedSubreddit, clearReturnedSubredditData } from './subredditsBarSlice';
 
 export default function SubredditsBar () {
     const dispatch = useDispatch();
     const subreddits = useSelector(selectSubreddits);
     let mostPopularSubreddits = [];
-    
+    const selectedSubreddit = useSelector(selectSelectedSubreddit);
+    const returnedSubredditData = useSelector(selectReturnedSubredditData)
 
     useEffect(() => {
         if (Object.keys(subreddits).length === 0) {
             dispatch(loadSubreddits());
         }
-    }, [subreddits]);
+        if (Object.keys(returnedSubredditData).length > 0) {
+            dispatch(clearArticles());
+            dispatch(setArticles(returnedSubredditData));
+            dispatch(clearReturnedSubredditData());
+            dispatch(clearCommentsforArticleID());
+            dispatch(setShowPage(selectedSubreddit));
+            window.scrollTo(0, 0);
+        }
+    }, [subreddits, returnedSubredditData]);
 
 
 
@@ -27,19 +38,7 @@ export default function SubredditsBar () {
                     <div id="subreddits-inner-container">
                         <h1 id="subreddits-header">Subreddits</h1>
                         <ul id="subreddit-links">
-                            {renderSubreddits(subreddits)}
-                            {/*<li><NavLink>r/funny</NavLink></li>
-                            <li><NavLink>r/AskReddit</NavLink></li>
-                            <li><NavLink>r/gaming</NavLink></li>
-                            <li><NavLink>r/aww</NavLink></li>
-                            <li><NavLink>r/music</NavLink></li>
-                            <li><NavLink>r/pics</NavLink></li>
-                            <li><NavLink>test</NavLink></li>
-                            <li><NavLink>test</NavLink></li>
-                            <li><NavLink>test</NavLink></li>
-                            <li><NavLink>test</NavLink></li>
-                            <li><NavLink>test</NavLink></li>
-                            <li><NavLink>test</NavLink></li> */}
+                            {renderSubreddits(subreddits, dispatch)}
                         </ul>
                         <h1 id="subreddits-sider">Subreddits</h1>
                     </div>
@@ -72,21 +71,29 @@ function top25Subreddits (subreddits) {
     return highestArray;
 }
 
-function renderSubreddits (subreddits) {
+function renderSubreddits (subreddits, dispatch) {
+    function handleSubredditsClick (event) {
+        dispatch(loadSubredditPage(event.target.id));
+        dispatch(setSelectedSubreddit(event.target.id));
+    }
+
+
     let mostPopularSubreddits = [];
     if (Object.keys(subreddits).length !== 0) {
         mostPopularSubreddits = top25Subreddits(subreddits);
 
         return mostPopularSubreddits.map(subreddit => {
-            console.log(subreddit);
             return (
-                <li>
+                <li key={subreddit.url.slice(0, subreddit.url.length-1)} id={subreddit.url.slice(0, subreddit.url.length-1)}>
                     <div>
-                        <NavLink key={subreddit.url.slice(0, subreddit.url.length-1)} id={subreddit.url.slice(0, subreddit.url.length-1)}>{subreddit.url.slice(0, subreddit.url.length-1)}</NavLink>
-                        <p class="subscriber-count">{subreddit.subscribers.toLocaleString('en-us')} users</p>
+                        <NavLink className='faux-link' id={subreddit.url} onClick={handleSubredditsClick}>{subreddit.url.slice(0, subreddit.url.length-1)}</NavLink>
+                        <p className="subscriber-count">{subreddit.subscribers.toLocaleString('en-us')} users</p>
                     </div>
                 </li>
             )
         })
     }
 }
+
+
+

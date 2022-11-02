@@ -7,17 +7,25 @@ export const preloadCommentsForArticle = createAsyncThunk(
     async (commentLink) => {
         const response = await fetch(`https://www.reddit.com${commentLink}.json?limit=10`);
         const jsonResponse = await response.json();
-        return await jsonResponse[1].data.children;
+        if (jsonResponse[1].data.children.length > 0) {
+            return jsonResponse[1].data.children;
+        } else {
+            return jsonResponse[0].data.children;
+        }
     }
 );
 
 export const loadAllCommentsForArticle = createAsyncThunk(
     'article/loadAllCommentsForArticle',
     async (commentLink) => {
-        console.log(commentLink);
         const response = await fetch(`https://www.reddit.com${commentLink}.json`);
         const jsonResponse = await response.json();
-        return await jsonResponse[1].data.children;
+        console.log(jsonResponse);
+        if (jsonResponse[1].data.children.length > 0) {
+            return jsonResponse[1].data.children;
+        } else {
+            return jsonResponse[0].data.children;
+        }
     }
 )
 
@@ -51,15 +59,30 @@ export const articlesSlice = createSlice({
             state.commentsForArticleID[comments.parentID] = {...comments, 
                 displayHowManyComments: displayHowManyComments
             }
+        },
+        clearCommentsforArticleID: (state, action) => {
+            state.commentsForArticleID = {};
         }
     },
     extraReducers: {
         [preloadCommentsForArticle.fulfilled]: (state, action) => {
-            state.commentsForArticleID[action.payload[0].data.parent_id].comments = action.payload
-            state.commentsForArticleID[action.payload[0].data.parent_id].displayHowManyComments = 3;
-            state.commentsForArticleID[action.payload[0].data.parent_id].isLoading = false;
-            state.commentsForArticleID[action.payload[0].data.parent_id].hasError = false;
-            state.commentsForArticleID[action.payload[0].data.parent_id].allCommentsLoaded = false;
+            const commentsForArticleIDcomments = {
+
+            }
+
+            if (action.payload[0].data.parent_id) {
+                state.commentsForArticleID[action.payload[0].data.parent_id].comments = action.payload
+                state.commentsForArticleID[action.payload[0].data.parent_id].displayHowManyComments = 3;
+                state.commentsForArticleID[action.payload[0].data.parent_id].isLoading = false;
+                state.commentsForArticleID[action.payload[0].data.parent_id].hasError = false;
+                state.commentsForArticleID[action.payload[0].data.parent_id].allCommentsLoaded = false;
+            } else {
+                state.commentsForArticleID[action.payload[0].data.name].comments = [action.payload[0].data.selftext];
+                state.commentsForArticleID[action.payload[0].data.name].displayHowManyComments = 3;
+                state.commentsForArticleID[action.payload[0].data.name].isLoading = false;
+                state.commentsForArticleID[action.payload[0].data.name].hasError = false;
+                state.commentsForArticleID[action.payload[0].data.name].allCommentsLoaded = false;
+            }
         },
         [preloadCommentsForArticle.rejected]: (state, action) => {
             state.commentsForArticleID[action.payload[0].data.parent_id].isLoading = false;
@@ -67,10 +90,24 @@ export const articlesSlice = createSlice({
         },
 
         [loadAllCommentsForArticle.fulfilled]: (state, action) => {
+            if (action.payload[0].data.parent_id) {
+                console.log(action.payload);
+                state.commentsForArticleID[action.payload[0].data.parent_id].comments = action.payload
+                state.commentsForArticleID[action.payload[0].data.parent_id].isLoading = false;
+                state.commentsForArticleID[action.payload[0].data.parent_id].hasError = false;
+                state.commentsForArticleID[action.payload[0].data.parent_id].allCommentsLoaded = true;
+            } else {
+                console.log(action.payload);
+                state.commentsForArticleID[action.payload[0].data.name].comments = [action.payload[0].data.selftext];
+                state.commentsForArticleID[action.payload[0].data.name].isLoading = false;
+                state.commentsForArticleID[action.payload[0].data.name].hasError = false;
+                state.commentsForArticleID[action.payload[0].data.name].allCommentsLoaded = true;
+            }
+            /*
             state.commentsForArticleID[action.payload[0].data.parent_id].comments = action.payload
             state.commentsForArticleID[action.payload[0].data.parent_id].isLoading = false;
             state.commentsForArticleID[action.payload[0].data.parent_id].hasError = false;
-            state.commentsForArticleID[action.payload[0].data.parent_id].allCommentsLoaded = true;
+            state.commentsForArticleID[action.payload[0].data.parent_id].allCommentsLoaded = true;*/
         },
         [loadAllCommentsForArticle.rejected]: (state, action) => {
             state.commentsForArticleID[action.payload[0].data.parent_id].isLoading = false;
@@ -95,7 +132,7 @@ export const articlesSlice = createSlice({
     }
 });
 
-export const { addArticleIDForComments, changeDisplayHowManyComments } = articlesSlice.actions;
+export const { addArticleIDForComments, changeDisplayHowManyComments, clearCommentsforArticleID } = articlesSlice.actions;
 
 
 export const SelectComments = (id) => {

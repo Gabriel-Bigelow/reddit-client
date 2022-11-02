@@ -8,6 +8,7 @@ import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
 
 import { formatTime, decodeURL } from '../../features/formatting'
+import { loadSubredditPage } from '../SubredditsBar/subredditsBarSlice';
 
 
 function renderMedia (type, articleData) {
@@ -115,11 +116,15 @@ export default function Article ({articleData}) {
         }
     }, [articleData])
 
+    function handleClick (event) {
+        dispatch(loadSubredditPage(event.target.id.slice(0, event.target.id.length-13)));
+    }
+
     return (
         <div className="article" id={articleData.id}>
             <div id={`${articleData.id}-article-shadow`}></div>
             <div className="article-inner-container">
-                <div className='article-subheader'><h4><NavLink>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
+                <div className='article-subheader'><h4><NavLink id={`/r/${articleData.subreddit}/-article-link`} onClick={handleClick}>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
                     
                 <div className="article-header">
                     <h2 className='no-margin'>{decodeURL(articleData.title)}</h2>
@@ -150,8 +155,10 @@ function commentCount (comments) {
     if (comments && comments.comments) {
         if (comments.comments && comments.comments[comments.comments.length-1].kind === 'more') {
             phrase = `More comments (${comments.comments[comments.comments.length-1].data.count})`;
+        } else if (typeof comments.comments !== 'array' || (typeof comments.comments === 'array' && comments.comments.length > comments.displayHowManyComments)) {
+            phrase = `Showing all comments`
         } else {
-            phrase = `More comments (${comments.comments.length}`;
+            phrase = `More comments (${comments.comments.length})`;
         }
     } else {
         phrase = `Show comments`;

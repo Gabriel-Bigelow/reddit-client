@@ -20,8 +20,15 @@ export const feedSlice = createSlice({
         setShowPage: (state, action) => {
             state.showPage = action.payload;
         },
+        clearArticles: (state, action) => {
+            state.articles = {};
+        },
         setArticles: (state, action) => {
-            state.articles = action.payload;
+            const array = action.payload;
+            for(let article of Object.keys(action.payload)) {
+                const { data } = array[article];
+                state.articles[data.id] = array[article];
+            }
         }        
     },
     extraReducers: {
@@ -45,7 +52,7 @@ export const feedSlice = createSlice({
 })
 
 
-export const { setShowPage, setArticles } = feedSlice.actions;
+export const { setShowPage, clearArticles, setArticles } = feedSlice.actions;
 
 export const selectShowPage = (state) => state.feed.showPage;
 export const SelectArticle = (id) => {

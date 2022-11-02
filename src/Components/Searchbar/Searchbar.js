@@ -7,7 +7,8 @@ import picNightMode from '../../images/nightMode.png';
 import { toggleNightMode } from '../../features/nightMode';
 import pulltab from './pulltab.png'
 import { clearSearchObjects, searchForArticles, selectReturnedSearch, selectSearchTerm, setSearch } from './searchSlice';
-import { setArticles, setShowPage } from '../Feed/feedSlice';
+import { clearArticles, setArticles, setShowPage } from '../Feed/feedSlice';
+import { loadSubredditPage } from '../SubredditsBar/subredditsBarSlice';
 
 
 export default function Searchbar () {
@@ -28,8 +29,9 @@ export default function Searchbar () {
     }
     
     function handleLogoClick () {
-        dispatch(setShowPage(''));
-        dispatch(setArticles({}));
+        //dispatch(setShowPage(''));
+        //dispatch(clearArticles());
+        dispatch(loadSubredditPage('/'));
     }
 
 

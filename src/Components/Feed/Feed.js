@@ -4,7 +4,7 @@ import Article from "../Article/Article"
 import './Feed.css'
 
 
-import { loadHomePage, selectArticles, selectIsLoadingArticles, selectShowPage, setArticles, setShowPage} from './feedSlice';
+import { clearArticles, loadHomePage, selectArticles, selectIsLoadingArticles, selectShowPage, setArticles, setShowPage} from './feedSlice';
 import { clearSearchObjects, selectReturnedSearch } from "../Searchbar/searchSlice";
 
 export default function Feed () {
@@ -16,11 +16,12 @@ export default function Feed () {
 
 
     useEffect(() => {
-        if(Object.keys(articles).length === 0 || !page) {
+        if(!page) {
             dispatch(loadHomePage());
             dispatch(setShowPage('all'));
         }
-        if (returnedSearch.length > 0) {
+        if (Object.keys(returnedSearch).length > 0) {
+            dispatch(clearArticles());
             dispatch(setArticles(returnedSearch));
             dispatch(clearSearchObjects());
             dispatch(setShowPage('search'));
