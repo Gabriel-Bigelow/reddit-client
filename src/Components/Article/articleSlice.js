@@ -165,8 +165,6 @@ export const articlesSlice = createSlice({
         },
 
         [loadAdditionalCommentsForArticle.pending]: (state, action) => {
-            console.log('pending');
-            console.log(action.payload);
         },
         [loadAdditionalCommentsForArticle.fulfilled]: (state, action) => {
             const commentsArray = action.payload;

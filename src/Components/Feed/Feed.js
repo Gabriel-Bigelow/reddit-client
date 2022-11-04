@@ -4,7 +4,7 @@ import Article from "../Article/Article"
 import './Feed.css'
 
 
-import { clearArticles, loadHomePage, selectArticles, selectIsLoadingArticles, selectShowPage, setArticles, setShowPage} from './feedSlice';
+import { clearArticles, loadHomePage, selectArticles, selectIsLoadingArticles, selectNumberOfArticlesToLoad, selectShowPage, setArticles, setLoadArticles, setLoadNumberOfArticles, setNumberOfArticlesToLoad, setShowPage} from './feedSlice';
 import { clearSearchObjects, selectReturnedSearch } from "../Searchbar/searchSlice";
 
 export default function Feed () {
@@ -14,10 +14,12 @@ export default function Feed () {
     const isLoadingArticles = useSelector(selectIsLoadingArticles);
     const returnedSearch = useSelector(selectReturnedSearch);
 
+    const numberOfArticlesToLoad = useSelector(selectNumberOfArticlesToLoad);
+
 
     useEffect(() => {
         if(!page) {
-            dispatch(loadHomePage());
+            dispatch(loadHomePage(numberOfArticlesToLoad));
             dispatch(setShowPage('all'));
         }
         if (Object.keys(returnedSearch).length > 0) {
@@ -26,14 +28,14 @@ export default function Feed () {
             dispatch(clearSearchObjects());
             dispatch(setShowPage('search'));
         }
-    }, [page, returnedSearch]);
 
+    }, [page, returnedSearch]);
 
 
     if (isLoadingArticles) {
         return (
             <div id="loading-message">
-                <h1>Lurking for posts...</h1>
+                <h1>Lurking...</h1>
             </div>
         )
     }

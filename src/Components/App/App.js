@@ -5,9 +5,30 @@ import './App.css'
 import Searchbar from '../Searchbar/Searchbar';
 import SubredditsBar from '../SubredditsBar/SubredditsBar';
 import Feed from '../Feed/Feed';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsLoadingArticles, selectNumberOfArticlesToLoad, selectShowPage, setLoadArticles, setNumberOfArticlesToLoad } from '../Feed/feedSlice';
 
 function App() {
-  
+  const dispatch = useDispatch();
+  const articlesLoading = useSelector(selectIsLoadingArticles);
+  const numberOfArticlesToLoad = useSelector(selectNumberOfArticlesToLoad);
+
+  const loadMorePosts = false;
+
+
+
+  setInterval(() => {
+    if (thirdArticleFromBottom && thirdArticleFromBottom.top < 200 && loadMorePosts) {
+      console.log('hello');
+      //dispatch(setNumberOfArticlesToLoad(5));
+    } else if (thirdArticleFromBottom && thirdArticleFromBottom.top > 200 && !loadMorePosts){
+      console.log('this is fucked');
+    }
+  }, 1500);
+
+
+
+
   return ( 
     <Router>
       <Searchbar />
@@ -23,19 +44,26 @@ function App() {
 export default App;
 
 
-const subredditsBar = document.getElementById('subreddits-and-shadow-holder');
 
-const pulltab2 = document.getElementById('pulltab');
 
-//move nav-bar to -5% top;
-//move pulltab to -45px top and 10% left;
+
+
+
+
 
 let offset;
 let screenHeight;
 let screenWidth;
 let navBar;
 let pulltab;
+
+let articlesClassArray;
+let thirdArticleFromBottom;
+let loadMoreArticles = false;
+
+
 window.addEventListener('scroll', function (event) {
+
     offset = window.pageYOffset;
     navBar = document.getElementById('nav-bar');
     pulltab = document.getElementById('pulltab');
@@ -53,8 +81,8 @@ window.addEventListener('scroll', function (event) {
         }, 500)
     }
 
-    //console.log(offset);
-    //console.log(document.getElementById('articles-container'));
+    articlesClassArray = document.getElementsByClassName('article');
+    thirdArticleFromBottom = articlesClassArray[articlesClassArray.length-3].getBoundingClientRect();
 })
 window.addEventListener('mousemove', function ({clientX, clientY}) {
   navBar = document.getElementById('nav-bar');

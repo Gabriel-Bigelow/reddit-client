@@ -8,8 +8,9 @@ import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
 
 import { formatTime, decodeURL } from '../../features/formatting'
-import { loadSubredditPage } from '../SubredditsBar/subredditsBarSlice';
+import { loadSubredditPage, setSelectedSubreddit } from '../SubredditsBar/subredditsBarSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { setShowPage } from '../Feed/feedSlice';
 
 
 function renderMedia (type, articleData) {
@@ -144,6 +145,7 @@ export default function Article ({articleData}) {
 
     function handleClick (event) {
         dispatch(loadSubredditPage(event.target.id.slice(0, event.target.id.length-13)));
+        dispatch(setSelectedSubreddit(event.target.id.slice(0, event.target.id.length-13)));
     }
 
     return (
