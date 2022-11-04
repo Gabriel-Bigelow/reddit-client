@@ -56,9 +56,6 @@
     padding: 2.5%;
     transition-duration: 0.5s;
 }
-.article-header:hover {
-    
-}
 
 
 
@@ -73,6 +70,7 @@
     align-items: center;
     justify-content: space-around;
     grid-row: 4;
+    flex-wrap: wrap;
 }
 
 .article-inner-container, .article-actions {
@@ -175,6 +173,18 @@
 .action-comments:hover {
     cursor: pointer;
     text-decoration: underline;
+}
+#hide-comments {
+    width:100%;
+    text-align:center;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    transition-duration: 0.5s;
+}
+#hide-comments:hover {
+    cursor: pointer;
+    background-color: rgb(100, 100, 100);
 }
 
 .vote-arrow {

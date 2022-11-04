@@ -51,8 +51,10 @@ window.addEventListener('scroll', function (event) {
         this.setTimeout(() => {
           pulltab.style.left = '5%'
         }, 500)
+    }
 
-    } 
+    //console.log(offset);
+    //console.log(document.getElementById('articles-container'));
 })
 window.addEventListener('mousemove', function ({clientX, clientY}) {
   navBar = document.getElementById('nav-bar');

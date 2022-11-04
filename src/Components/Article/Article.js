@@ -1,14 +1,15 @@
 import './Article.css'
-import { NavLink, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import ReactMarkdown from 'react-markdown'
-import { SelectComments, addArticleIDForComments, preloadCommentsForArticle, changeDisplayHowManyComments, loadAllCommentsForArticle} from './articleSlice';
+import { SelectComments, addArticleIDForComments, preloadCommentsForArticle, loadAllCommentsForArticle, setDisplayHowManyComments, loadAdditionalCommentsForArticle } from './articleSlice';
 import { useEffect } from 'react';
 import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
 
 import { formatTime, decodeURL } from '../../features/formatting'
 import { loadSubredditPage } from '../SubredditsBar/subredditsBarSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 
 function renderMedia (type, articleData) {
@@ -65,18 +66,18 @@ const pageNotLoaded = () => {
 }
 
 function renderComments (comments, timeRightNow) {
-    if (comments && comments.comments) {
-        const commentsArray = [];
-        for (let comment of comments.comments) {
-            if (comment.kind === 't1' && comment.data.author !== 'AutoModerator' && commentsArray.length < comments.displayHowManyComments) {
-                commentsArray.push(comment);
+    const commentsArray = [];
+
+    if (comments && comments.commentsList) {
+        const commentsList = comments.commentsList;
+        for (let comment of Object.keys(commentsList)) {
+            if (commentsList[comment] !== null && commentsArray.length < comments.displayHowManyComments && commentsArray.length < comments.commentsLoaded && commentsList[comment]) {
+                commentsArray.push(commentsList[comment]);
             }
         }
-
         return commentsArray.map(comment => {
-            const {data} = comment;
-            const timeSinceComment = formatTime(data.created, timeRightNow)
-            return <Comment key={data.id} data={data} timeSinceComment={timeSinceComment} voteArrow={voteArrow}/>
+            const timeSinceComment = formatTime(comment.created, timeRightNow)
+            return <Comment key={comment.id} data={comment} timeSinceComment={timeSinceComment} voteArrow={voteArrow}/>
         })
     }
 }
@@ -91,10 +92,11 @@ function popoutImage ({target}) {
 
 export default function Article ({articleData}) {
     const dispatch = useDispatch();
-    const votes = articleData.score >= 1000 ? `${(articleData.score / 1000).toFixed(1)}k` : articleData.score;
-    const comments = SelectComments(`t3_${articleData.id}`);
     const timeRightNow = Date.now();
     const timeSincePost = formatTime(articleData.created, timeRightNow);
+    const votes = articleData.score >= 1000 ? `${(articleData.score / 1000).toFixed(1)}k` : articleData.score;
+    const comments = SelectComments(`t3_${articleData.id}`);
+    
 
 
     function showMoreComments () {
@@ -103,7 +105,31 @@ export default function Article ({articleData}) {
         if (!comments.allCommentsLoaded) {
             dispatch(loadAllCommentsForArticle(articleData.permalink))
         }
-        dispatch(changeDisplayHowManyComments({displayHowManyComments: newNum, comments: comments}))
+        
+        if (comments && comments.commentsList) {
+            if (comments.allCommentsLoaded && comments.displayHowManyComments + 15 >= comments.commentsLoaded) {
+                const moreCommentsArray = [];
+                for (let comment of Object.keys(comments.commentsList)) {
+                    if (comments.commentsList[comment] === null && moreCommentsArray.length < Math.max(15, (comments.displayHowManyComments - comments.commentsLoaded)+15 )) {
+                        moreCommentsArray.push(comment);
+                    }
+                }
+                if (moreCommentsArray.length > 0) {
+                    dispatch(loadAdditionalCommentsForArticle({subreddit: articleData.subreddit, articleID: articleData.id, commentIDArray: moreCommentsArray})).then(unwrapResult)
+                    .then(originalPromiseResult => {})
+                    .catch(rejected => {console.log(rejected)});
+                } else {
+                    console.log('no more comments!');
+                }
+            }
+        }
+
+        dispatch(setDisplayHowManyComments({displayHowManyComments: newNum, comments: comments}))
+    }
+
+    function showLessComments () {
+        dispatch(setDisplayHowManyComments({displayHowManyComments: 3, comments: comments}));
+        document.getElementById(articleData.id).scrollIntoView(true);
     }
 
 
@@ -138,6 +164,7 @@ export default function Article ({articleData}) {
                 <div className="article-comments">
                     {renderComments(comments, timeRightNow)}
                 </div>
+                {(comments && comments.commentsList) ? (comments.displayHowManyComments > 3 ? <div id="hide-comments" onClick={showLessComments}>^</div> : undefined) : undefined}
                 <div id={`${articleData.id}-article-actions`} className="article-actions">
                         <div className='no-margin votes-action'>
                             <p className='no-margin'><img className="vote-arrow" src={voteArrow} alt="upvote"/>{votes} <img className="vote-arrow rotate180" src={voteArrow} alt="downvote"/></p>
@@ -152,16 +179,16 @@ export default function Article ({articleData}) {
 function commentCount (comments) {
     let phrase;
 
-    if (comments && comments.comments) {
-        if (comments.comments && comments.comments[comments.comments.length-1].kind === 'more') {
-            phrase = `More comments (${comments.comments[comments.comments.length-1].data.count})`;
-        } else if (typeof comments.comments !== 'array' || (typeof comments.comments === 'array' && comments.comments.length > comments.displayHowManyComments)) {
-            phrase = `Showing all comments`
-        } else {
-            phrase = `More comments (${comments.comments.length})`;
+    if (comments && comments.commentsList) {
+        if (comments.displayComments !== 0) {
+            phrase = `More comments (${Object.keys(comments.commentsList).length})`
+        } 
+        if (comments.displayHowManyComments > comments.commentsLoaded && comments.displayHowManyComments) {
+            phrase = `Showing all comments (${Object.keys(comments.commentsList).length})`;
         }
     } else {
         phrase = `Show comments`;
     }
     return phrase;
 }
+

@@ -104,16 +104,17 @@ export function extraFormatMarkdown (text) {
     function formatLinks (text) {
         const linkRegex = /\[.*?\]\(.*?\)/
 		const textRegex = /\[.*?\]/
-        const hrefRegex = /http.*?\)/
+        const hrefRegex = /\(.*?\)/
         
         const soloHrefRegex = /http.*?\s/
 
-        const endHrefRegex = /http.*?\z/
+        //const endHrefRegex = /http.*?/
   
         let newText = text + ' ';
         const linksArray = [];
         const soloLinksArray = [];
-        const endLinksArray = [];
+        //const endLinksArray = [];
+
         while (newText.match(linkRegex) !== null) {
             const foundWholeLink = newText.match(linkRegex);
             const stringWholeLink = foundWholeLink.join();
@@ -124,7 +125,7 @@ export function extraFormatMarkdown (text) {
 
             const foundHref = stringWholeLink.match(hrefRegex);
             const stringHref = foundHref.join();
-            const formattedHref = stringHref.slice(0, stringHref.length-1);
+            const formattedHref = stringHref.slice(1, stringHref.length-1);
 
             const linkObject = {text: formattedLinkText, href: formattedHref};
             linksArray.push(linkObject);
