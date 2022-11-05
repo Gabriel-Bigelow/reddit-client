@@ -35,7 +35,9 @@ function App() {
             for (let frame of document.getElementsByClassName('iframes')) {
               let globalCount = 0;
               for (let key of Object.keys(frame.contentWindow)) {
-                  globalCount++;
+                  if (typeof parseInt(key) === 'number') {
+                      globalCount++;
+                  }
               }
               if (globalCount < 1) {
                   frame.parentNode.removeChild(frame);
@@ -45,7 +47,6 @@ function App() {
     }
 
     function closePopout (event) {
-        console.log(event);
         const child = event.target.lastChild
 
         event.target.removeChild(child);
@@ -84,7 +85,6 @@ let pulltab;
 
 
 window.addEventListener('scroll', function () {
-
     offset = window.pageYOffset;
     navBar = document.getElementById('nav-bar');
     pulltab = document.getElementById('pulltab');
@@ -120,12 +120,12 @@ window.addEventListener('mousemove', function ({clientX, clientY}) {
           pulltab.style.left = '5%'
         }, 500)
     }
-    if (clientX < 50 && clientY < window.innerHeight*0.5) {
+    if (clientX < 50 && clientY < window.innerHeight*0.85) {
         document.getElementById('subreddits-and-shadow-holder').style.left = '0px';
         document.getElementById('subreddits-header').style.margin = '0px 0 0 0';
         document.getElementById('subreddits-sider').style.margin = '0 45px 0 0';
     }
-    if (clientX > 250 || clientY > window.innerHeight * 0.5) {
+    if (clientX > 250 || clientY > window.innerHeight * 0.85) {
         document.getElementById('subreddits-and-shadow-holder').style.left = '-230px';
         document.getElementById('subreddits-header').style.margin = '45px 0 0 0';
         document.getElementById('subreddits-sider').style.margin = '0 0px 0 0';
@@ -137,4 +137,8 @@ window.addEventListener('resize', function(event) {
     const searchBarWidth = event.currentTarget.innerWidth*0.15625;
     document.getElementById('searchbar').style.minWidth = `${searchBarWidth}px`;
     document.getElementById('searchbar').style.maxWidth = `${searchBarWidth}px`;
+
+    const sidebarShadow = document.getElementById('subreddits-inner-container');
+
+    sidebarShadow.style.gridTemplateRows = `45px ${(window.innerHeight*0.7/969) * window.innerHeight}px`;
 })

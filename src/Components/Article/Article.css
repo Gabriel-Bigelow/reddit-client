@@ -130,6 +130,46 @@
     cursor: pointer;
     justify-self: center;
 }
+.article-image-gallery {
+    display: grid;
+    grid-template: 1fr / minmax(30px, 60px) 1fr minmax(30px, 60px);
+    justify-content: space-around;
+    align-items: center;
+    transition-duration: 0.5s;
+}
+.article-image-gallery:hover {
+    background-color: rgb(30, 30, 30)
+}
+.article-image-gallery div {
+    display: grid;
+    grid-row: 1;
+    grid-column: 2;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.5s;
+}
+.article-image-gallery button {
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    justify-self: center;
+    font-size: 1.25rem;
+    font-weight:bolder;
+    border-radius: 30px;
+    border: 3px solid lightgray;
+    color: white;
+    background-color: transparent;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+.article-image-gallery button:hover {
+    height: 50px;
+    width: 50px;
+    font-size:1.4rem;
+    color:white;
+}
 .article-body video {
     max-height: 600px;
     max-width: 100%;

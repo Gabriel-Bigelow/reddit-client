@@ -9,7 +9,6 @@ import { loadSubreddits, loadSubredditPage, selectSubreddits, selectReturnedSubr
 export default function SubredditsBar () {
     const dispatch = useDispatch();
     const subreddits = useSelector(selectSubreddits);
-    let mostPopularSubreddits = [];
     const selectedSubreddit = useSelector(selectSelectedSubreddit);
     const returnedSubredditData = useSelector(selectReturnedSubredditData)
 
@@ -25,7 +24,7 @@ export default function SubredditsBar () {
             dispatch(setShowPage(selectedSubreddit));
             window.scrollTo(0, 0);
         }
-    }, [subreddits, returnedSubredditData]);
+    }, [dispatch, subreddits, returnedSubredditData, selectedSubreddit]);
 
 
 
@@ -77,7 +76,6 @@ function renderSubreddits (subreddits, dispatch) {
         dispatch(setSelectedSubreddit(event.target.id));
     }
 
-
     let mostPopularSubreddits = [];
     if (Object.keys(subreddits).length !== 0) {
         mostPopularSubreddits = top25Subreddits(subreddits);
@@ -85,7 +83,7 @@ function renderSubreddits (subreddits, dispatch) {
         return mostPopularSubreddits.map(subreddit => {
             return (
                 <li key={subreddit.url.slice(0, subreddit.url.length-1)} id={subreddit.url.slice(0, subreddit.url.length-1)}>
-                    <div>
+                    <div onLoad={document.getElementById('subreddits-inner-container').style.gridTemplateRows = `45px ${(window.innerHeight*0.7/969) * window.innerHeight}px`}>
                         <NavLink className='faux-link' id={subreddit.url} onClick={handleSubredditsClick}>{subreddit.url.slice(0, subreddit.url.length-1)}</NavLink>
                         <p className="subscriber-count">{subreddit.subscribers.toLocaleString('en-us')} users</p>
                     </div>

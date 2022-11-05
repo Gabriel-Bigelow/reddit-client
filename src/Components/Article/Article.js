@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
 
-import { formatTime, decodeURL, extraFormatMarkdown, grabLink } from '../../features/formatting'
+import { formatTime, decodeURL, extraFormatMarkdown } from '../../features/formatting'
 import { loadSubredditPage, setSelectedSubreddit } from '../SubredditsBar/subredditsBarSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 
@@ -32,23 +32,6 @@ function renderMedia (type, articleData) {
     if (!type && articleData.media_embed.content) {
         const decodedHTML = decodeHTML(articleData.media_embed.content);
         return <div dangerouslySetInnerHTML={{__html: decodedHTML}} />
-    }
-    //render image posts with more than 1 image
-    if (!type && !articleData.selftext && articleData.url.includes('/gallery')) {
-        const baseURL = 'https://www.redditmedia.com'
-        const permalink = articleData.permalink;
-        const decodedHTML = decodeHTML()
-        return (
-            <div className="article-link-and-frame">
-                <iframe className='embedded-gallery' src={`${baseURL}${permalink}?ref_source=embed&ref=share&embed=true`} sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
-            </div>
-        )
-
-
-
-
-
-
         
     //render links (video links or website links)
     } else if (type === "link") {
@@ -63,8 +46,8 @@ function renderMedia (type, articleData) {
         else {
             return (
                 <div className="article-link-and-frame">
-                    <a className='article-text out-link' href={articleData.url} target="_blank">{articleData.url}</a>
-                    <iframe className="iframes" name={`${articleData.id}-iframe`} id={`${articleData.id}-iframe`} src={ articleData.url }></iframe>
+                    <a className='article-text out-link' href={articleData.url}>{articleData.url}</a>
+                    <iframe title={`${articleData.title}-preview`} className="iframes" name={`${articleData.id}-iframe`} id={`${articleData.id}-iframe`} src={ articleData.url }></iframe>
                 </div>
             )
         }
@@ -75,6 +58,31 @@ function renderMedia (type, articleData) {
     }  else if (type === "image") {
         return (
                 <img src={articleData.url} alt={articleData.title} onClick={popoutImage}/>
+        )
+    }
+    //render image posts with more than 1 image
+    if (!type && !articleData.selftext && articleData.url.includes('/gallery') && articleData.media_metadata) {        
+        const imageLinkArray = []
+        const imageIDArray = [];
+        for (let imageID of Object.keys(articleData.media_metadata)) {
+            const decodedHTML = decodeHTML(articleData.media_metadata[imageID].s.u)
+            imageLinkArray.push(decodedHTML);
+            imageIDArray.push(imageID);
+        }
+        return (
+            <div className='article-image-gallery'>
+                <button id={`${articleData.id}-button-1`} onClick={galleryMove}>&lt;</button>
+                {imageLinkArray.map(imageLink => {
+                    return (
+                        <div className={`${articleData.id}-images`} id={imageIDArray.splice(0, 1)}>
+                            <img src={imageLink} onClick={popoutImage} alt={articleData.title}></img>
+                        </div>
+                    )
+                })}
+                {styleGalleryItems(articleData)}
+
+                <button id={`${articleData.id}-button+1`} onClick={galleryMove}>&gt;</button>
+            </div>
         )
     //render videos hosted on Reddit
     } else if (type === "hosted:video") {
@@ -113,7 +121,6 @@ function renderComments (comments, timeRightNow) {
 
 function popoutImage ({target}) {
     const poppedOutDiv = document.getElementById('popped-out-container');
-    console.log(poppedOutDiv)
     const imageToPopOut = document.createElement('img');
     poppedOutDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.75)'
     poppedOutDiv.style.zIndex = '100'
@@ -128,6 +135,64 @@ function popoutImage ({target}) {
     poppedOutDiv.appendChild(imageToPopOut);
 }
 
+function styleGalleryItems (articleData) {
+    const { id } = articleData
+    const images = document.getElementsByClassName(`${id}-images`);
+
+    if (images.length > 0) {
+        for (let image of images) {
+            image.style.opacity = 0;
+            image.style.zIndex = -1
+        };
+        images[0].style.opacity = 1;
+        images[0].style.zIndex = 10;
+    }
+}
+
+function galleryMove ({target}) {
+    const images = document.getElementsByClassName(`${target.id.slice(0, target.id.length-9)}-images`);
+    let incrementor = target.id.slice(target.id.length-2, target.id.length);
+    if (incrementor === '-1') {
+        incrementor = -1;
+    } else {
+        incrementor = 1;
+    }
+    let imageShown;
+    let indexOfImageShown;
+    let index = 0;
+    for (let image of images) {
+        if (image.style.opacity === '1') {
+            indexOfImageShown = index;
+            imageShown = image;
+        }
+        index++;
+    }
+    let indexOfNextImage;
+    if (indexOfImageShown + incrementor === images.length && incrementor > 0) {
+        indexOfNextImage = 0;
+    } else if (incrementor > 0) {
+        indexOfNextImage = indexOfImageShown + 1;
+    }
+    if (indexOfImageShown + incrementor === -1 && incrementor < 0) {
+        indexOfNextImage = images.length-1;
+    } else if (incrementor < 0) {
+        indexOfNextImage = indexOfImageShown + incrementor;
+    }
+
+    imageShown.style.opacity = 0;
+    imageShown.style.zIndex = -1;
+    images[indexOfNextImage].style.opacity = 1;
+    images[indexOfNextImage].style.zIndex = 10;
+}
+
+// function popoutGallery ({target}) {
+//     const poppedOutDiv = document.getElementById('popped-out-container');
+//     const divToPopOut = document.createElement('div');
+//     poppedOutDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.75)'
+//     poppedOutDiv.style.zIndex = '100';
+//     console.log(target);
+
+// }
 
 export default function Article ({articleData}) {
     const dispatch = useDispatch();

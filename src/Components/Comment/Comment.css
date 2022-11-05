@@ -45,5 +45,5 @@
     padding-left: 1rem;
     max-width: 100%;
     grid-column: 2;
-    word-break: break-all;
+    word-break: break-word;
 }
