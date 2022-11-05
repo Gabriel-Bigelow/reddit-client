@@ -2,8 +2,6 @@ import picNightMode from '../images/nightMode.png';
 import picNightModeOff from '../images/nightModeOff.png';
 
 let nightMode = false;
-const darker = 'rgb(20, 20, 20)';
-const dark = 'rgb(50, 50, 50)';
 const lighter = 'rgb(230, 230, 230)';
 const black = "rgb(0, 0, 0)";
 const white = 'rgb(255, 255, 255)'

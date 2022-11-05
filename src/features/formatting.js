@@ -167,7 +167,6 @@ export function grabLink (text) {
   
     let newText = text;
     const linksArray = [];
-    const soloLinksArray = [];
     //const endLinksArray = [];
 
         while (newText.match(linkRegex) !== null) {

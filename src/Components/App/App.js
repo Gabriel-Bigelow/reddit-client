@@ -18,8 +18,6 @@ function App() {
         setInterval(() => {
             const articlesClassArray = document.getElementsByClassName('article');
             const fourthArticleFromBottom = articlesClassArray[articlesClassArray.length-4].getBoundingClientRect();
-            //console.log(window.frames);
-            //console.log(document.getElementsByClassName('iframes'));
 
             firstLoad = false;
         
