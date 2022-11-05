@@ -92,6 +92,7 @@
     justify-content: center;
     width: 100%;
     transition-duration: 0.5s;
+    color: white;
 }
 .article-body:hover {
     background-color: rgb(30, 30, 30);
@@ -100,21 +101,25 @@
 .article-link-and-frame{
     display: flex;
     flex-direction: column;
-    height: 600px;
+    max-height: 600px;
     width: 100%;
     overflow:hidden;
     overflow-x: hidden;
 }
 .article-link-and-frame iframe {
+    background-color: white;
     width: 102%;
     height: 618px;
 }
 
-.article-text {
+.article-text, .article-body p {
     color: white;
     padding: 1rem 2rem;
     margin: 0px;
     word-wrap: break-word;
+}
+.article-text, .article-body p a {
+    color: rgb(30, 255,155);
 }
 
 .article-body img {
@@ -129,6 +134,21 @@
     max-height: 600px;
     max-width: 100%;
     justify-self: center;
+}
+.article-body .embedded-content {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    max-height: 600px;
+    max-width: 100%;
+    grid-template: 1fr / 1fr
+}
+.article-body .embedded-content iframe{
+    height: 600px;
+    width: 100%;
+}
+.article-body .embedded-gallery {
+    border: 0;
 }
 
 
@@ -177,13 +197,16 @@
 #hide-comments {
     width:100%;
     text-align:center;
-    color: white;
-    font-size: 1.25rem;
-    font-weight: 600;
-    transition-duration: 0.5s;
+    color: gray;
+    font-size: 1rem;
+    font-weight: 200;
+    transition-duration: 0.3s;
 }
 #hide-comments:hover {
     cursor: pointer;
+    color:white;
+    font-size:1.25rem;
+    font-weight: 600;
     background-color: rgb(100, 100, 100);
 }
 
@@ -205,4 +228,15 @@
 }
 .no-margin {
     margin: 0;
+}
+
+
+#sub-frame-error {
+    display: block;
+    width:0px;
+    height:0px;
+}
+.neterror {
+    width:0px;
+    height: 0px;
 }

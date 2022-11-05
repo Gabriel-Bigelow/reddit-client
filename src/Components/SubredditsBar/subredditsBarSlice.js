@@ -12,6 +12,9 @@ export const loadSubreddits = createAsyncThunk(
 export const loadSubredditPage = createAsyncThunk(
     'subredditsBar/loadSubredditsData',
     async (url) => {
+        if (!url) {
+            url = '/';
+        }
         const response = await fetch(`https://www.reddit.com${url}.json?limit=5`);
         const jsonResponse = await response.json();
         return jsonResponse.data.children;

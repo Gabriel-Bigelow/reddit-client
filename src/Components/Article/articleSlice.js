@@ -194,7 +194,6 @@ export const articlesSlice = createSlice({
             state.commentsForArticleID[parentID].commentsLoaded = commentsLoaded;
         },
         [loadAdditionalCommentsForArticle.rejected]: (state, action) => {
-            console.log('rejected');
         },
 
 

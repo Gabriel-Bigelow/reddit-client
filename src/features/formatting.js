@@ -157,6 +157,42 @@ export function extraFormatMarkdown (text) {
     return newText
 }
 
+export function grabLink (text) {
+    const linkRegex = /\[.*?\]\(.*?\)/
+	const textRegex = /\[.*?\]/
+    const hrefRegex = /\(.*?\)/
+        
+
+    //const endHrefRegex = /http.*?/
+  
+    let newText = text;
+    const linksArray = [];
+    const soloLinksArray = [];
+    //const endLinksArray = [];
+
+        while (newText.match(linkRegex) !== null) {
+            const foundWholeLink = newText.match(linkRegex);
+            const stringWholeLink = foundWholeLink.join();
+
+            const foundText = stringWholeLink.match(textRegex);
+            const stringText = foundText.join();
+            const formattedLinkText = stringText.slice(1, stringText.length-1);
+
+            const foundHref = stringWholeLink.match(hrefRegex);
+            const stringHref = foundHref.join();
+            const formattedHref = stringHref.slice(1, stringHref.length-1);
+
+            const linkObject = {text: formattedLinkText, href: formattedHref};
+            linksArray.push(linkObject);
+
+          	newText = newText.replace(linkRegex, 'formattedLinkGoesRightHere');
+        }
+    
+    if (linksArray[0]) {
+        return linksArray[0].text;
+    }
+}
+
 /*//formatting must go in the order of most symbols to surround a string to least
     const htmlItems = [];
     const newTextArray = [];

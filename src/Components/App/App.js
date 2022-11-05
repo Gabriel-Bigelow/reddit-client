@@ -1,36 +1,63 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import './App.css'
 import Searchbar from '../Searchbar/Searchbar';
 import SubredditsBar from '../SubredditsBar/SubredditsBar';
 import Feed from '../Feed/Feed';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectIsLoadingArticles, selectNumberOfArticlesToLoad, selectShowPage, setLoadArticles, setNumberOfArticlesToLoad } from '../Feed/feedSlice';
+import { useDispatch } from 'react-redux';
+import { setNumberOfArticlesToLoad } from '../Feed/feedSlice';
+let firstLoad = true;
 
 function App() {
-  const dispatch = useDispatch();
-  const articlesLoading = useSelector(selectIsLoadingArticles);
-  const numberOfArticlesToLoad = useSelector(selectNumberOfArticlesToLoad);
+    const dispatch = useDispatch();
+    let loadNewArticles = false;
+  
 
-  const loadMorePosts = false;
+    if (firstLoad) {
+        setInterval(() => {
+            const articlesClassArray = document.getElementsByClassName('article');
+            const fourthArticleFromBottom = articlesClassArray[articlesClassArray.length-4].getBoundingClientRect();
+            //console.log(window.frames);
+            //console.log(document.getElementsByClassName('iframes'));
+
+            firstLoad = false;
+        
+            if (fourthArticleFromBottom.top < 0) {
+                loadNewArticles = true;
+            }
+            if (loadNewArticles) {
+                loadNewArticles = false;
+                dispatch(setNumberOfArticlesToLoad(5));
+            }
 
 
-
-  setInterval(() => {
-    if (thirdArticleFromBottom && thirdArticleFromBottom.top < 200 && loadMorePosts) {
-      console.log('hello');
-      //dispatch(setNumberOfArticlesToLoad(5));
-    } else if (thirdArticleFromBottom && thirdArticleFromBottom.top > 200 && !loadMorePosts){
-      console.log('this is fucked');
+            for (let frame of document.getElementsByClassName('iframes')) {
+              let globalCount = 0;
+              for (let key of Object.keys(frame.contentWindow)) {
+                  globalCount++;
+              }
+              if (globalCount < 1) {
+                  frame.parentNode.removeChild(frame);
+              }
+          }
+        }, 2000);
     }
-  }, 1500);
 
+    function closePopout (event) {
+        console.log(event);
+        const child = event.target.lastChild
 
+        event.target.removeChild(child);
+        event.target.style.backgroundColor = "rgba(100, 100, 100, 0)";
+        event.target.style.zIndex = '-10';
+    }
+  
 
 
   return ( 
     <Router>
+      <div id="popped-out-container" onClick={closePopout}></div>
       <Searchbar />
       
       <div id="body-container">
@@ -52,17 +79,11 @@ export default App;
 
 
 let offset;
-let screenHeight;
-let screenWidth;
 let navBar;
 let pulltab;
 
-let articlesClassArray;
-let thirdArticleFromBottom;
-let loadMoreArticles = false;
 
-
-window.addEventListener('scroll', function (event) {
+window.addEventListener('scroll', function () {
 
     offset = window.pageYOffset;
     navBar = document.getElementById('nav-bar');
@@ -80,9 +101,6 @@ window.addEventListener('scroll', function (event) {
           pulltab.style.left = '5%'
         }, 500)
     }
-
-    articlesClassArray = document.getElementsByClassName('article');
-    thirdArticleFromBottom = articlesClassArray[articlesClassArray.length-3].getBoundingClientRect();
 })
 window.addEventListener('mousemove', function ({clientX, clientY}) {
   navBar = document.getElementById('nav-bar');
@@ -116,13 +134,7 @@ window.addEventListener('mousemove', function ({clientX, clientY}) {
 
 
 window.addEventListener('resize', function(event) {
-    screenWidth = event.currentTarget.innerWidth;
-    screenHeight = event.currentTarget.innerHeight;
-    const fullSizeRatio = 1920/300;
-    const searchBarWidth = screenWidth*0.15625;
+    const searchBarWidth = event.currentTarget.innerWidth*0.15625;
     document.getElementById('searchbar').style.minWidth = `${searchBarWidth}px`;
     document.getElementById('searchbar').style.maxWidth = `${searchBarWidth}px`;
-    
-
-    // console.log(screenWidth);
 })

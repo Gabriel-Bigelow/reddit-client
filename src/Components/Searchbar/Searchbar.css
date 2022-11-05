@@ -14,12 +14,11 @@
     position: fixed;
     width: 100%;
     top: 0%;
-    z-index: 100;
     background-color: rgb(6, 114, 249);
     padding: 0 1.25rem;
     align-items: center;
     transition-duration: 0.5s;
-    z-index: 100;
+    z-index: 10;
 }
 
 .inner {
@@ -82,7 +81,7 @@
 #night-mode-logo {
     height: 1.2rem;
     width: 1.2rem;
-    z-index: 100;
+    z-index: 10;
 }
 
 #searchbar {

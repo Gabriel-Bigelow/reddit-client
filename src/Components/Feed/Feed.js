@@ -4,8 +4,9 @@ import Article from "../Article/Article"
 import './Feed.css'
 
 
-import { clearArticles, loadHomePage, selectArticles, selectIsLoadingArticles, selectNumberOfArticlesToLoad, selectShowPage, setArticles, setLoadArticles, setLoadNumberOfArticles, setNumberOfArticlesToLoad, setShowPage} from './feedSlice';
-import { clearSearchObjects, selectReturnedSearch } from "../Searchbar/searchSlice";
+import { clearArticles, loadFeedItems, selectArticles, selectIsLoadingArticles, selectLastArticle, selectNumberOfArticlesToLoad, selectShowPage, setArticles, setShowPage} from './feedSlice';
+import { clearSearchObjects, selectReturnedSearch, selectSearchTerm } from "../Searchbar/searchSlice";
+import { selectSelectedSubreddit } from "../SubredditsBar/subredditsBarSlice";
 
 export default function Feed () {
     const dispatch = useDispatch();
@@ -13,13 +14,14 @@ export default function Feed () {
     const articles = useSelector(selectArticles);
     const isLoadingArticles = useSelector(selectIsLoadingArticles);
     const returnedSearch = useSelector(selectReturnedSearch);
+    const selectedSubreddit = useSelector(selectSelectedSubreddit);
 
     const numberOfArticlesToLoad = useSelector(selectNumberOfArticlesToLoad);
-
+    const lastArticle = useSelector(selectLastArticle);
+    const searchTerm = useSelector(selectSearchTerm);
 
     useEffect(() => {
-        if(!page) {
-            dispatch(loadHomePage(numberOfArticlesToLoad));
+        if (!page) {
             dispatch(setShowPage('all'));
         }
         if (Object.keys(returnedSearch).length > 0) {
@@ -28,11 +30,13 @@ export default function Feed () {
             dispatch(clearSearchObjects());
             dispatch(setShowPage('search'));
         }
+        if (page) {
+            dispatch(loadFeedItems({numberOfArticlesToLoad: numberOfArticlesToLoad, lastArticle: lastArticle, subreddit: selectedSubreddit, searchTerm: searchTerm}));
+        }
 
-    }, [page, returnedSearch]);
+    }, [page, returnedSearch, numberOfArticlesToLoad, lastArticle, searchTerm, selectedSubreddit, dispatch]);
 
-
-    if (isLoadingArticles) {
+    if (isLoadingArticles && Object.keys(articles).length === 0) {
         return (
             <div id="loading-message">
                 <h1>Lurking...</h1>

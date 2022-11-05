@@ -7,31 +7,51 @@ import { useEffect } from 'react';
 import voteArrow from './voteArrow.svg';
 import Comment from '../Comment/Comment';
 
-import { formatTime, decodeURL } from '../../features/formatting'
+import { formatTime, decodeURL, extraFormatMarkdown, grabLink } from '../../features/formatting'
 import { loadSubredditPage, setSelectedSubreddit } from '../SubredditsBar/subredditsBarSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { setShowPage } from '../Feed/feedSlice';
 
+function decodeHTML (html) {
+    const text = document.createElement('textarea');
+    text.innerHTML = html;
+    return text.value;
+}
 
 function renderMedia (type, articleData) {
     //render text articles like r/AskReddit
     if (!type && articleData.selftext) {
-        if (articleData.selftext.includes('.com')) {
-            //console.log(articleData.selftext);
+        let { selftext } = articleData;
+        if (articleData.selftext.includes('http')) {
+            selftext = extraFormatMarkdown(selftext)
         }
         return (
-            //<p className='article-text'>{decodeURL(articleData.selftext)}</p>
-            <ReactMarkdown children={articleData.selfText}></ReactMarkdown>
+            <ReactMarkdown children={selftext}></ReactMarkdown>
+        )
+    }
+    //render embedded media like tweets
+    if (!type && articleData.media_embed.content) {
+        const decodedHTML = decodeHTML(articleData.media_embed.content);
+        return <div dangerouslySetInnerHTML={{__html: decodedHTML}} />
+    }
+    //render image posts with more than 1 image
+    if (!type && !articleData.selftext && articleData.url.includes('/gallery')) {
+        const baseURL = 'https://www.redditmedia.com'
+        const permalink = articleData.permalink;
+        const decodedHTML = decodeHTML()
+        return (
+            <div className="article-link-and-frame">
+                <iframe className='embedded-gallery' src={`${baseURL}${permalink}?ref_source=embed&ref=share&embed=true`} sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+            </div>
         )
 
-    //render image posts with more than 1 image
-    }
-    if (!type && !articleData.selftext && articleData.url.includes('/gallery')) {
-        return (
-            <p className='article-text'>FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME FIX ME
-            </p>
-        )
-    } /*else if (type === "link") {
+
+
+
+
+
+        
+    //render links (video links or website links)
+    } else if (type === "link") {
         if (articleData.preview.reddit_video_preview) {
             return (
                 <video controls autoPlay muted loop>
@@ -39,31 +59,35 @@ function renderMedia (type, articleData) {
                 </video>
             )
         }
+        //attempts to create an article preview iframe
         else {
             return (
                 <div className="article-link-and-frame">
                     <a className='article-text out-link' href={articleData.url} target="_blank">{articleData.url}</a>
-                    <iframe src={articleData.url}></iframe>
+                    <iframe className="iframes" name={`${articleData.id}-iframe`} id={`${articleData.id}-iframe`} src={ articleData.url }></iframe>
                 </div>
             )
-        } 
-    } */ else if (type === "image") {
+        }
+    } else if (type === 'self' && articleData.selftext.includes('http') && !articleData.selftext.includes('reddit.com')) {
+        const formattedData = extraFormatMarkdown(articleData.selftext)
+        return <ReactMarkdown children={formattedData} />
+    //render images
+    }  else if (type === "image") {
         return (
-                <img src={articleData.url} alt={articleData.title}/>
+                <img src={articleData.url} alt={articleData.title} onClick={popoutImage}/>
         )
+    //render videos hosted on Reddit
     } else if (type === "hosted:video") {
         return (
             <video controls autoPlay muted loop>
                 <source src={articleData.media.reddit_video.fallback_url} type="video/mp4" />
             </video>
         )
+    //render embedded media like videos/gifs
     } else if (type === "rich:video") {
-        //console.log(articleData.media_embed.content);
+        const decodedHTML = decodeHTML(articleData.media_embed.content);
+        return <div className="embedded-content" dangerouslySetInnerHTML={{__html: decodedHTML}} />
     }
-}
-
-const pageNotLoaded = () => {
-    return;
 }
 
 function renderComments (comments, timeRightNow) {
@@ -88,8 +112,22 @@ function renderComments (comments, timeRightNow) {
 
 
 function popoutImage ({target}) {
-
+    const poppedOutDiv = document.getElementById('popped-out-container');
+    console.log(poppedOutDiv)
+    const imageToPopOut = document.createElement('img');
+    poppedOutDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.75)'
+    poppedOutDiv.style.zIndex = '100'
+    imageToPopOut.src = target.src;
+    imageToPopOut.className = 'popped-out-child';
+    imageToPopOut.style.zIndex = '101';
+    if (imageToPopOut.naturalHeight > imageToPopOut.naturalWidth && imageToPopOut.naturalWidth/imageToPopOut.naturalHeight < window.innerWidth / window.innerHeight) {
+        imageToPopOut.style.height = "95%";
+    } else {
+        imageToPopOut.style.width = "95%";
+    }
+    poppedOutDiv.appendChild(imageToPopOut);
 }
+
 
 export default function Article ({articleData}) {
     const dispatch = useDispatch();
@@ -119,8 +157,6 @@ export default function Article ({articleData}) {
                     dispatch(loadAdditionalCommentsForArticle({subreddit: articleData.subreddit, articleID: articleData.id, commentIDArray: moreCommentsArray})).then(unwrapResult)
                     .then(originalPromiseResult => {})
                     .catch(rejected => {console.log(rejected)});
-                } else {
-                    console.log('no more comments!');
                 }
             }
         }
@@ -128,22 +164,22 @@ export default function Article ({articleData}) {
         dispatch(setDisplayHowManyComments({displayHowManyComments: newNum, comments: comments}))
     }
 
-    function showLessComments () {
-        dispatch(setDisplayHowManyComments({displayHowManyComments: 3, comments: comments}));
+    function hideComments () {
+        dispatch(setDisplayHowManyComments({displayHowManyComments: 0, comments: comments}));
         document.getElementById(articleData.id).scrollIntoView(true);
     }
 
 
     useEffect(() => {
-        if(articleData.post_hint === 'link' || !articleData.post_hint) {
+        if(articleData.post_hint === 'link' || articleData.post_hint === 'self' || !articleData.post_hint) {
             dispatch(addArticleIDForComments(articleData.id));
             dispatch(preloadCommentsForArticle(articleData.permalink));
         } else {
             dispatch(addArticleIDForComments(articleData.id));
         }
-    }, [articleData])
+    }, [dispatch, articleData])
 
-    function handleClick (event) {
+    function handleSubredditLinkClick (event) {
         dispatch(loadSubredditPage(event.target.id.slice(0, event.target.id.length-13)));
         dispatch(setSelectedSubreddit(event.target.id.slice(0, event.target.id.length-13)));
     }
@@ -152,7 +188,7 @@ export default function Article ({articleData}) {
         <div className="article" id={articleData.id}>
             <div id={`${articleData.id}-article-shadow`}></div>
             <div className="article-inner-container">
-                <div className='article-subheader'><h4><NavLink id={`/r/${articleData.subreddit}/-article-link`} onClick={handleClick}>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
+                <div className='article-subheader'><h4><NavLink id={`/r/${articleData.subreddit}/-article-link`} onClick={handleSubredditLinkClick}>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
                     
                 <div className="article-header">
                     <h2 className='no-margin'>{decodeURL(articleData.title)}</h2>
@@ -166,7 +202,7 @@ export default function Article ({articleData}) {
                 <div className="article-comments">
                     {renderComments(comments, timeRightNow)}
                 </div>
-                {(comments && comments.commentsList) ? (comments.displayHowManyComments > 3 ? <div id="hide-comments" onClick={showLessComments}>^</div> : undefined) : undefined}
+                {(comments && comments.commentsList) ? (comments.displayHowManyComments > 0 ? <div id="hide-comments" onClick={hideComments}>^</div> : undefined) : undefined}
                 <div id={`${articleData.id}-article-actions`} className="article-actions">
                         <div className='no-margin votes-action'>
                             <p className='no-margin'><img className="vote-arrow" src={voteArrow} alt="upvote"/>{votes} <img className="vote-arrow rotate180" src={voteArrow} alt="downvote"/></p>
