@@ -9,7 +9,7 @@
     margin-bottom: 5rem;
 
 }
-#article-shadow::before {
+.article-shadow::before {
     content: '';
     position: absolute;
     bottom: 0;

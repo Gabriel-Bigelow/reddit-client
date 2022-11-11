@@ -127,11 +127,22 @@ function popoutImage ({target}) {
     imageToPopOut.src = target.src;
     imageToPopOut.className = 'popped-out-child';
     imageToPopOut.style.zIndex = '101';
-    if (imageToPopOut.naturalHeight > imageToPopOut.naturalWidth && imageToPopOut.naturalWidth/imageToPopOut.naturalHeight < window.innerWidth / window.innerHeight) {
-        imageToPopOut.style.height = "95%";
-    } else {
-        imageToPopOut.style.width = "95%";
-    }
+    console.log(window.innerWidth);
+    console.log(window.innerHeight);
+        const widthRatio = window.innerWidth / imageToPopOut.naturalHeight * 0.95;
+        const heightRatio = window.innerHeight / imageToPopOut.naturalWidth * 0.95;
+        console.log(widthRatio);
+        console.log(heightRatio)
+        console.log(imageToPopOut.naturalHeight * widthRatio);
+        console.log(imageToPopOut.naturalWidth * heightRatio);
+        if (imageToPopOut.naturalHeight * widthRatio > window.innerHeight * 0.95 && imageToPopOut.naturalWidth * widthRatio < window.innerWidth * 0.95) {
+            imageToPopOut.style.height = "95%";
+            console.log('2')
+        } else {
+            imageToPopOut.style.width = "95%";
+            console.log('3')
+        }
+    
     poppedOutDiv.appendChild(imageToPopOut);
 }
 
@@ -251,7 +262,7 @@ export default function Article ({articleData}) {
 
     return (
         <div className="article" id={articleData.id}>
-            <div id={`${articleData.id}-article-shadow`}></div>
+            <div id={`${articleData.id}-article-shadow`} className="article-shadow"></div>
             <div className="article-inner-container">
                 <div className='article-subheader'><h4><NavLink id={`/r/${articleData.subreddit}/-article-link`} onClick={handleSubredditLinkClick}>r/{articleData.subreddit}</NavLink> by u/{articleData.author} - {timeSincePost[0]} {timeSincePost[1]} ago </h4></div>
                     

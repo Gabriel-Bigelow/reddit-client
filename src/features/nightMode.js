@@ -60,7 +60,7 @@ export function toggleNightMode () {
         darken('header', true);
         document.body.style.backgroundColor = white;
         //night mode button
-        lighten('night-mode-button');
+        lighten('night-mode-button', true, 'rgb(230, 230, 230');
         document.getElementById('night-mode-logo').src = picNightMode;
         //searchbar
         lighten('searchbar', true, lighter)
@@ -70,6 +70,7 @@ export function toggleNightMode () {
         for (let article of articles) {
             const articleShadow = document.createElement('div')
             articleShadow.id = `${article.id}-article-shadow`;
+            articleShadow.className = "article-shadow";
             article.appendChild(articleShadow);
         }
 

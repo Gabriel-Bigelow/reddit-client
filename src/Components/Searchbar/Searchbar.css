@@ -67,7 +67,7 @@
 #night-mode-button {
     display: flex;
     grid-template: 1fr / 1fr 1fr;
-    background-color: white;
+    background-color: rgb(230, 230, 230);
     padding: .5rem;;
     align-items: center;
     gap: .35rem;
@@ -77,6 +77,7 @@
     border-radius: 1000px;
     margin-left: 2rem;
     margin-right: 0.5rem;
+    transition-duration: 0.5s;
 }
 #night-mode-logo {
     height: 1.2rem;

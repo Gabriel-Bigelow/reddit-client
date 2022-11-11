@@ -35,7 +35,6 @@ export const loadAdditionalCommentsForArticle = createAsyncThunk(
         const responseArray = [];
 
         for (let commentID of commentIDArray) {
-            //fetchArray.push(await fetch(`https://www.reddit.com/r/${subreddit}/comments/${articleID}/comment/${commentID}/.json`))
             const response = await fetch (`https://www.reddit.com/r/${subreddit}/comments/${articleID}/comment/${commentID}/.json`);
             const jsonResponse = await response.json();
             if (await jsonResponse[1].data.children.length > 0) {
