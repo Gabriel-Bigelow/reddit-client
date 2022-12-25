@@ -123,7 +123,7 @@ Data is stored in different slices of state, which are held in the React/Redux S
 
 <br>
 
-`https://www.reddit.com/.json?limit=5&after=`${postId}`
+`https://www.reddit.com/.json?limit=5&after=${postId}`
 * When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/.json` with query parameters `?` of `limit=5&after=${ID of the last post loaded in the feed slice}`. The returned response object is parsed to JSON and used to add the additional posts to the `Feed` slice.
 
 <br>
@@ -131,13 +131,13 @@ Data is stored in different slices of state, which are held in the React/Redux S
 
 ### Fetching posts from a specific subreddit
 
-`https://www.reddit.com/`${subreddit}`/.json?limit=5`
-* When a user selects a subreddit, a request is made to `https://www.reddit.com/`${subreddit}`/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `limit=5`.
+`https://www.reddit.com/${subreddit}/.json?limit=5`
+* When a user selects a subreddit, a request is made to `https://www.reddit.com/${subreddit}/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `limit=5`.
 
 <br>
 
-`https://www.reddit.com/`${subreddit}`/.json?after=`${ID of the last post loaded on the feed slice}`&limit=5`
-* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/`${subreddit}`/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `after=`${ID of the last post loaded on the feed slice}`&limit=5`.
+`https://www.reddit.com/${subreddit}/.json?after=${ID of the last post loaded on the feed slice}&limit=5`
+* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/${subreddit}/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `after=`${ID of the last post loaded on the feed slice}`&limit=5`.
 <br>
 
 
@@ -149,7 +149,7 @@ Data is stored in different slices of state, which are held in the React/Redux S
 <br>
 
 `https://www.reddit.com/search/.json?q=${searchTerm}&limit=5&after=${ID of the last post loaded in the feed slice}`
-* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/search/.json` with query parameters `?` of `q=${searchTerm}&limit=5&after=`${ID of the last post loaded in the feed slice}`. The returned response object is parsed to JSON and used to add the additional posts to the `Feed` slice.
+* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/search/.json` with query parameters `?` of `q=${searchTerm}&limit=5&after=${ID of the last post loaded in the feed slice}`. The returned response object is parsed to JSON and used to add the additional posts to the `Feed` slice.
 
 <br>
 
