@@ -118,38 +118,38 @@ Data is stored in different slices of state, which are held in the React/Redux S
 
 ### Fetching posts
 
-<mark>https://www.reddit.com/.json?limit=5</mark>
-* On initial load, a request is sent to <mark>https://www.reddit.com/.json</mark> with a query parameter <mark>?</mark> of <mark>limit=5</mark>. The returned response object is parsed to JSON and used to populate the <mark>Feed</mark> slice with posts.
+`https://www.reddit.com/.json?limit=5`
+* On initial load, a request is sent to `https://www.reddit.com/.json` with a query parameter `?` of `limit=5`. The returned response object is parsed to JSON and used to populate the `Feed` slice with posts.
 
 <br>
 
-<mark>https://www.reddit.com/.json?limit=5&after=`${postId}`</mark>
-* When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/.json</mark> with query parameters <mark>?</mark> of <mark>limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>. The returned response object is parsed to JSON and used to add the additional posts to the <mark>Feed</mark> slice.
+`https://www.reddit.com/.json?limit=5&after=`${postId}``
+* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/.json` with query parameters `?` of `limit=5&after=`${ID of the last post loaded in the feed slice}``. The returned response object is parsed to JSON and used to add the additional posts to the `Feed` slice.
 
 <br>
 
 
 ### Fetching posts from a specific subreddit
 
-<mark>https://www.reddit.com/`${subreddit}`/.json?limit=5</mark>
-* When a user selects a subreddit, a request is made to <mark>https://www.reddit.com/`${subreddit}`/.json</mark>, with the specified subreddit being part of the path of the request, and a query parameter <mark>?</mark> of <mark>limit=5</mark>.
+`https://www.reddit.com/`${subreddit}`/.json?limit=5`
+* When a user selects a subreddit, a request is made to `https://www.reddit.com/`${subreddit}`/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `limit=5`.
 
 <br>
 
-<mark>https://www.reddit.com/`${subreddit}`/.json?after=`${ID of the last post loaded on the feed slice}`&limit=5</mark>
-* When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/`${subreddit}`/.json</mark>, with the specified subreddit being part of the path of the request, and a query parameter <mark>?</mark> of <mark>after=`${ID of the last post loaded on the feed slice}`&limit=5</mark>.
+`https://www.reddit.com/`${subreddit}`/.json?after=`${ID of the last post loaded on the feed slice}`&limit=5`
+* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/`${subreddit}`/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `after=`${ID of the last post loaded on the feed slice}`&limit=5`.
 <br>
 
 
 ### Searching for posts (searchbar)
 
-<mark>https://www.reddit.com/search/.json?q=${searchTerm}&limit=5</mark>
-* On submission of the search term from the search bar, a request is sent to <mark>https://www.reddit.com/search/.json</mark> with a query parameter <mark>?</mark> of <mark>q=`${searchTerm}`&limit=5</mark>. The returned response object is parsed to JSON and used to populate the <mark>Feed</mark> slice with posts.
+`https://www.reddit.com/search/.json?q=${searchTerm}&limit=5`
+* On submission of the search term from the search bar, a request is sent to `https://www.reddit.com/search/.json` with a query parameter `?` of `q=`${searchTerm}`&limit=5`. The returned response object is parsed to JSON and used to populate the `Feed` slice with posts.
 
 <br>
 
-<mark>https://www.reddit.com/search/.json?q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>
-* When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/search/.json</mark> with query parameters <mark>?</mark> of <mark>q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>. The returned response object is parsed to JSON and used to add the additional posts to the <mark>Feed</mark> slice.
+`https://www.reddit.com/search/.json?q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}``
+* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/search/.json` with query parameters `?` of `q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}``. The returned response object is parsed to JSON and used to add the additional posts to the `Feed` slice.
 
 <br>
 
@@ -157,13 +157,13 @@ Data is stored in different slices of state, which are held in the React/Redux S
 ### Fetching comments
 * Up to 10 comments are preloaded for all text-based posts.
 
-<mark>https://www.reddit.com/${permalink}/.json?limit=10</mark>
-* During a fetch request for posts, when the returned object's post data object contains a "type" property of "link", "self", or no defined "type" property, a request is made for comments at <mark>https://www.reddit.com/</mark> with the post's permalink property as the rest of the path, with a query parameter <mark>?</mark> of <mark>limit=10</mark>. The returned object contains an array of comment objects containing information about the comment, which is then added to the <mark>Articles</mark> slice. When the articles are rendered on the feed, if the section of the <mark>Articles</mark> slice that matches the post's ID has an array of comments, those comments are rendered along with the post, as well as the total number of comments in the post.
+`https://www.reddit.com/${permalink}/.json?limit=10`
+* During a fetch request for posts, when the returned object's post data object contains a "type" property of "link", "self", or no defined "type" property, a request is made for comments at `https://www.reddit.com/` with the post's permalink property as the rest of the path, with a query parameter `?` of `limit=10`. The returned object contains an array of comment objects containing information about the comment, which is then added to the `Articles` slice. When the articles are rendered on the feed, if the section of the `Articles` slice that matches the post's ID has an array of comments, those comments are rendered along with the post, as well as the total number of comments in the post.
 
 <br>
 
-<mark>https://www.reddit.com${permalink}/.json</mark>
-* When a user clicks on the comments button on a post, if the "allCommentsLoaded" property on that section of the <mark>Articles</mark> slice is false, a request is made for comments at <mark>https://www.reddit.com/</mark> with the post's permalink property as the rest of the path, with no query parameters, and all comments are fetched and added to that section of the <mark>Articles</mark> slice, allCommentsLoaded is marked as true, and the total number of comments in the post is rendered in the button.
+`https://www.reddit.com${permalink}/.json`
+* When a user clicks on the comments button on a post, if the "allCommentsLoaded" property on that section of the `Articles` slice is false, a request is made for comments at `https://www.reddit.com/` with the post's permalink property as the rest of the path, with no query parameters, and all comments are fetched and added to that section of the `Articles` slice, allCommentsLoaded is marked as true, and the total number of comments in the post is rendered in the button.
 
 <br>
 
