@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 To see a live deploy of this project, visit [Lurker](https://reddit-lurker.netlify.app/).
 
-Lurker is a multi-page application, built with the React library.
+Lurker is a single-page application, built with the React library.
 
 
 
