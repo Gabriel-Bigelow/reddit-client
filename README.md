@@ -157,6 +157,8 @@ Data is stored in different slices of state, which are held in the React/Redux S
 ### Fetching comments
 * Up to 10 comments are preloaded for all text-based posts.
 
+<br>
+
 `https://www.reddit.com/${permalink}/.json?limit=10`
 * During a fetch request for posts, when the returned object's post data object contains a "type" property of "link", "self", or no defined "type" property, a request is made for comments at `https://www.reddit.com/` with the post's permalink property as the rest of the path, with a query parameter `?` of `limit=10`. The returned object contains an array of comment objects containing information about the comment, which is then added to the `Articles` slice. When the articles are rendered on the feed, if the section of the `Articles` slice that matches the post's ID has an array of comments, those comments are rendered along with the post, as well as the total number of comments in the post.
 
