@@ -83,7 +83,7 @@ function renderSubreddits (subreddits, dispatch) {
         return mostPopularSubreddits.map(subreddit => {
             return (
                 <li key={subreddit.url.slice(0, subreddit.url.length-1)} id={subreddit.url.slice(0, subreddit.url.length-1)}>
-                    <div onLoad={document.getElementById('subreddits-inner-container').style.gridTemplateRows = `45px ${(window.innerHeight*0.7/969) * window.innerHeight}px`}>
+                    <div onLoad={resizeSubredditBar()}>
                         <NavLink className='faux-link' id={subreddit.url} onClick={handleSubredditsClick}>{subreddit.url.slice(0, subreddit.url.length-1)}</NavLink>
                         <p className="subscriber-count">{subreddit.subscribers.toLocaleString('en-us')} users</p>
                     </div>
@@ -91,6 +91,10 @@ function renderSubreddits (subreddits, dispatch) {
             )
         })
     }
+}
+
+function resizeSubredditBar () {
+    document.getElementById('subreddits-inner-container').style.gridTemplateRows = `45px ${(window.innerHeight*0.7/969) * window.innerHeight}px`;
 }
 
 

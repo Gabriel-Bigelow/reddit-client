@@ -74,7 +74,7 @@ function renderMedia (type, articleData) {
                 <button id={`${articleData.id}-button-1`} onClick={galleryMove}>&lt;</button>
                 {imageLinkArray.map(imageLink => {
                     return (
-                        <div className={`${articleData.id}-images`} id={imageIDArray.splice(0, 1)}>
+                        <div key={imageLink} className={`${articleData.id}-images`} id={imageIDArray.splice(0, 1)}>
                             <img src={imageLink} onClick={popoutImage} alt={articleData.title}></img>
                         </div>
                     )
