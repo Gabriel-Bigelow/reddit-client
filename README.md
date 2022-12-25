@@ -137,14 +137,14 @@ Data is stored in different slices of state, which are held in the React/Redux S
 <br>
 
 `https://www.reddit.com/${subreddit}/.json?after=${ID of the last post loaded on the feed slice}&limit=5`
-* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/${subreddit}/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `after=`${ID of the last post loaded on the feed slice}`&limit=5`.
+* When scrolled to the 3rd to last post loaded, a request is sent to `https://www.reddit.com/${subreddit}/.json`, with the specified subreddit being part of the path of the request, and a query parameter `?` of `after=${ID of the last post loaded on the feed slice}&limit=5`.
 <br>
 
 
 ### Searching for posts (searchbar)
 
 `https://www.reddit.com/search/.json?q=${searchTerm}&limit=5`
-* On submission of the search term from the search bar, a request is sent to `https://www.reddit.com/search/.json` with a query parameter `?` of `q=`${searchTerm}`&limit=5`. The returned response object is parsed to JSON and used to populate the `Feed` slice with posts.
+* On submission of the search term from the search bar, a request is sent to `https://www.reddit.com/search/.json` with a query parameter `?` of `q=${searchTerm}&limit=5`. The returned response object is parsed to JSON and used to populate the `Feed` slice with posts.
 
 <br>
 
