@@ -116,7 +116,7 @@ Based on user interactions, different requests are sent via JavaScript's fetch A
 
 Data is stored in different slices of state, which are held in the React/Redux Store. This state is managed with the Redux Toolkit.
 
-### Fetching Posts
+### Fetching posts
 * On initial load, a request is sent to <mark>https://www.reddit.com/.json</mark> with a query parameter <mark>?</mark> of <mark>limit=5</mark>. The returned response object is parsed to JSON and used to populate the <mark>Feed</mark> slice with posts.
 <br>
 <mark>https://www.reddit.com/.json?limit=5</mark>
@@ -124,6 +124,26 @@ Data is stored in different slices of state, which are held in the React/Redux S
 * When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/.json</mark> with query parameters <mark>?</mark> of <mark>limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>. The returned response object is parsed to JSON and used to add the additional posts to the <mark>Feed</mark> slice.
 <br>
 <mark>https://www.reddit.com/.json?limit=5&after=${postId}</mark>
+
+### Fetching posts from a specific subreddit
+
+* When a user selects a subreddit, a request is made to <mark>https://www.reddit.com/`${subreddit}`/.json</mark>, with the specified subreddit being part of the path of the request, and a query parameter <mark>?</mark> of <mark>limit=5</mark>.
+<br>
+<mark>https://www.reddit.com/`${subreddit}`/.json?limit=5</mark>
+
+* When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/`${subreddit}`/.json</mark>, with the specified subreddit being part of the path of the request, and a query parameter <mark>?</mark> of <mark>after=`${ID of the last post loaded on the feed slice}`&limit=5</mark>.
+<br>
+<mark>https://www.reddit.com/`${subreddit}`/.json?after=`${ID of the last post loaded on the feed slice}`&limit=5</mark>
+
+### Searching for posts (searchbar)
+
+* On submission of the search term from the search bar, a request is sent to <mark>https://www.reddit.com/search/.json</mark> with a query parameter <mark>?</mark> of <mark>q=`${searchTerm}`&limit=5</mark>. The returned response object is parsed to JSON and used to populate the <mark>Feed</mark> slice with posts.
+<br>
+<mark>https://www.reddit.com/search/.json?q=${searchTerm}&limit=5</mark>
+
+* When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/search/.json</mark> with query parameters <mark>?</mark> of <mark>q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>. The returned response object is parsed to JSON and used to add the additional posts to the <mark>Feed</mark> slice.
+<br>
+<mark>https://www.reddit.com/search/.json?q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>
 
 ### Fetching comments
 * Up to 10 comments are preloaded for all text-based posts.
@@ -139,16 +159,6 @@ Data is stored in different slices of state, which are held in the React/Redux S
 * The number of comments displayed is increased by 3 every time the comments button is clicked, until all comments are shown.
 
 * Fetch requests will not be repeated for comments of a specific article after the allCommentsLoaded property is marked as true, since all comments are already fetched.
-
-### Searching for posts (searchbar)
-
-* On submission of the search term from the search bar, a request is sent to <mark>https://www.reddit.com/search.json</mark> with a query parameter <mark>?</mark> of <mark>q=`${searchTerm}`&limit=5</mark>. The returned response object is parsed to JSON and used to populate the <mark>Feed</mark> slice with posts.
-<br>
-<mark>https://www.reddit.com/search.json?q=${searchTerm}&limit=5</mark>
-
-* When scrolled to the 3rd to last post loaded, a request is sent to <mark>https://www.reddit.com/search.json</mark> with query parameters <mark>?</mark> of <mark>q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>. The returned response object is parsed to JSON and used to add the additional posts to the <mark>Feed</mark> slice.
-<br>
-<mark>https://www.reddit.com/search.json?q=`${searchTerm}`&limit=5&after=`${ID of the last post loaded in the feed slice}`</mark>
 
 ## Technologies
 
