@@ -164,7 +164,7 @@ Data is stored in different slices of state, which are held in the React/Redux S
 
 <br>
 
-`https://www.reddit.com${permalink}/.json`
+`https://www.reddit.com/${permalink}/.json`
 * When a user clicks on the comments button on a post, if the "allCommentsLoaded" property on that section of the `Articles` slice is false, a request is made for comments at `https://www.reddit.com/` with the post's permalink property as the rest of the path, with no query parameters, and all comments are fetched and added to that section of the `Articles` slice, allCommentsLoaded is marked as true, and the total number of comments in the post is rendered in the button.
 
 <br>
